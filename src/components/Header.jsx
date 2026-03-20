@@ -1,39 +1,54 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import ProfileModal from "./ProfileModal";
+import { getTeam } from "../utils/teams";
 
 export default function Header() {
   const profile = useSelector((s) => s.profile);
   const [showModal, setShowModal] = useState(false);
 
-  const teamColors = { inter: "#003399", cab: "#ccaa00", tunisie: "#cc0000" };
+  const teams = profile.favoriteTeams.map((id) => getTeam(id)).filter(Boolean);
+
+  // Short label for badge: up to 4 chars from first word
+  function badgeLabel(name) {
+    return name.split(" ")[0].slice(0, 4).toUpperCase();
+  }
 
   return (
     <>
       <div className="header">
-        {profile.favoriteTeams.length > 0 ? (
-          profile.favoriteTeams.map((t) => (
-            <div key={t} className={`club-badge badge-${t}`} style={{ borderColor: teamColors[t] }}>
-              {t === "inter" ? "INTER" : t === "cab" ? "CAB" : "TUN"}
+        {teams.length > 0 ? (
+          teams.slice(0, 4).map((team) => (
+            <div
+              key={team.id}
+              className="club-badge"
+              style={{
+                background: team.color + "18",
+                color: team.color,
+                border: `2px solid ${team.color}`,
+              }}
+              title={team.name}
+            >
+              {badgeLabel(team.name)}
             </div>
           ))
         ) : (
-          <>
-            <div className="club-badge badge-inter">INTER</div>
-            <div className="club-badge badge-cab">CAB</div>
-            <div className="club-badge badge-tun">TUN</div>
-          </>
+          <div className="club-badge" style={{ background: "#f0f0f0", color: "#aaa", border: "2px solid #ddd" }}>
+            ?
+          </div>
         )}
+
         <div className="header-text" style={{ flex: 1 }}>
           <h2>
             {profile.name ? `Calendrier de ${profile.name}` : "Mon calendrier de matchs"}
           </h2>
           <p>
-            {profile.favoriteTeams.length > 0
-              ? profile.favoriteTeams.map((t) => t === "inter" ? "Inter" : t === "cab" ? "CAB" : "Tunisie").join(" · ") + " + matchs importants"
-              : "Inter · CAB · Tunisie + matchs importants"}
+            {teams.length > 0
+              ? teams.map((t) => t.name).join(" · ") + " · grands matchs"
+              : "Choisis tes équipes dans le profil"}
           </p>
         </div>
+
         <button className="profile-btn" onClick={() => setShowModal(true)}>
           ⚙ Profil
         </button>
