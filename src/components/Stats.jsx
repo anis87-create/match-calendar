@@ -2,10 +2,11 @@ import { useSelector } from "react-redux";
 
 export default function Stats() {
   const items = useSelector((s) => s.matches.items);
+  const favoriteTeams = useSelector((s) => s.profile.favoriteTeams);
 
   const total = items.length;
-  const inter = items.filter((m) => m.type === "inter").length;
-  const fav = items.filter((m) => m.type === "cab" || m.type === "tunisie").length;
+  const favorites = items.filter((m) => favoriteTeams.includes(m.type)).length;
+  const important = items.filter((m) => m.type === "important").length;
   const watched = items.filter((m) => m.watched).length;
 
   return (
@@ -15,12 +16,12 @@ export default function Stats() {
         <div className="stat-label">Total</div>
       </div>
       <div className="stat-card">
-        <div className="stat-num">{inter}</div>
-        <div className="stat-label">Inter</div>
+        <div className="stat-num">{favorites}</div>
+        <div className="stat-label">Mes équipes</div>
       </div>
       <div className="stat-card">
-        <div className="stat-num">{fav}</div>
-        <div className="stat-label">CAB / Tunisie</div>
+        <div className="stat-num">{important}</div>
+        <div className="stat-label">Grands matchs</div>
       </div>
       <div className="stat-card">
         <div className="stat-num">{watched}</div>

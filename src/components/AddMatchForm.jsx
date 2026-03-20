@@ -2,17 +2,18 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addMatch, updateMatch } from "../features/matches/matchesSlice";
 import { clearEditing } from "../features/ui/uiSlice";
+import { getTeam } from "../utils/teams";
 
 const today = new Date().toISOString().split("T")[0];
-
-const emptyForm = { teams: "", league: "ucl", date: today, time: "", type: "inter", channel: "" };
+const emptyForm = { teams: "", league: "ucl", date: today, time: "", type: "", channel: "" };
 
 export default function AddMatchForm() {
   const dispatch = useDispatch();
   const editingId = useSelector((s) => s.ui.editingId);
   const matchToEdit = useSelector((s) => s.matches.items.find((m) => m.id === editingId));
+  const favoriteTeams = useSelector((s) => s.profile.favoriteTeams);
 
-  const [form, setForm] = useState(emptyForm);
+  const [form, setForm] = useState({ ...emptyForm, type: favoriteTeams[0] || "important" });
 
   useEffect(() => {
     if (matchToEdit) {
@@ -25,7 +26,7 @@ export default function AddMatchForm() {
         channel: matchToEdit.channel || "",
       });
     } else {
-      setForm(emptyForm);
+      setForm({ ...emptyForm, date: form.date, type: favoriteTeams[0] || "important" });
     }
   }, [matchToEdit]);
 
@@ -43,13 +44,13 @@ export default function AddMatchForm() {
       dispatch(clearEditing());
     } else {
       dispatch(addMatch(form));
-      setForm({ ...emptyForm, date: form.date });
+      setForm((prev) => ({ ...emptyForm, date: prev.date, type: prev.type }));
     }
   }
 
   function handleCancel() {
     dispatch(clearEditing());
-    setForm(emptyForm);
+    setForm({ ...emptyForm, type: favoriteTeams[0] || "important" });
   }
 
   const isEditing = editingId !== null;
@@ -115,12 +116,14 @@ export default function AddMatchForm() {
           <input name="time" type="time" value={form.time} onChange={handleChange} />
         </div>
         <div className="form-group">
-          <label>Équipe favorite</label>
+          <label>Équipe concernée</label>
           <select name="type" value={form.type} onChange={handleChange}>
-            <option value="inter">Inter Milan</option>
-            <option value="cab">CAB</option>
-            <option value="tunisie">Équipe de Tunisie</option>
-            <option value="important">Match important</option>
+            {favoriteTeams.map((id) => {
+              const team = getTeam(id);
+              return <option key={id} value={id}>{team ? team.name : id}</option>;
+            })}
+            <option value="important">⭐ Grand match</option>
+            <option value="other">Autre</option>
           </select>
         </div>
       </div>

@@ -3,9 +3,10 @@ export function getScore(match, profile = {}) {
   const favoriteTeams = profile.favoriteTeams ?? [];
   const favoriteLeagues = profile.favoriteLeagues ?? [];
 
-  // Incontournable : équipes favorites + matchs importants
+  // Incontournable : équipes favorites
   if (favoriteTeams.includes(type)) return 100;
-  if (type === "important") return 95;
+  // Match important (grand match : final, clasico, etc.)
+  if (type === "important") return 90;
   // À regarder : compétitions favorites
   if (favoriteLeagues.includes(league)) return 60;
   // Si disponible : tout le reste
@@ -18,7 +19,7 @@ export function getPriority(score) {
   return 3;
 }
 
-export const prioText = { 1: "Incontournable", 2: "À regarder", 3: "Si disponible" };
+export const prioText = { 1: "Incontournable", 2: "Match important", 3: "Si disponible" };
 export const prioClass = { 1: "p1", 2: "p2", 3: "p3" };
 export const prioStripClass = { 1: "prio-1", 2: "prio-2", 3: "prio-3" };
 

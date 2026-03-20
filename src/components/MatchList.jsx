@@ -17,14 +17,13 @@ export default function MatchList() {
   const plan = buildPlan(items, profile);
   const today = new Date().toISOString().split("T")[0];
 
+  const predefined = ["all", "important", "upcoming", "watched", "watch"];
   const filtered = items.filter((m) => {
-    if (currentFilter === "inter") return m.type === "inter";
-    if (currentFilter === "cab") return m.type === "cab";
-    if (currentFilter === "tunisie") return m.type === "tunisie";
     if (currentFilter === "important") return m.type === "important";
     if (currentFilter === "upcoming") return m.date >= today && !m.watched;
     if (currentFilter === "watched") return m.watched;
     if (currentFilter === "watch") return plan.get(m.id)?.watch && !m.watched && m.date >= today;
+    if (!predefined.includes(currentFilter)) return m.type === currentFilter; // team filter
     return true;
   });
 
