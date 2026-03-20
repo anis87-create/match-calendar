@@ -1,11 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const DEFAULT_MATCHES = [
-  { id: 1, teams: "Inter Milan vs AC Milan", league: "serie", date: "2026-03-22", time: "21:45", type: "inter", channel: "beIN Sports 1", watched: false },
-  { id: 2, teams: "Real Madrid vs Barcelone", league: "liga", date: "2026-03-29", time: "21:00", type: "important", channel: "beIN Sports 2", watched: false },
-  { id: 3, teams: "Inter Milan vs Bayern Munich", league: "ucl", date: "2026-04-08", time: "22:00", type: "inter", channel: "beIN Sports UCL", watched: false },
-];
-
 function loadFromStorage() {
   const keys = ["match_v4", "match_v3", "match_schedule_v2", "match_schedule"];
   for (const k of keys) {
@@ -20,7 +14,7 @@ function loadFromStorage() {
       }
     } catch (_) {}
   }
-  return { matches: DEFAULT_MATCHES, nextId: 4 };
+  return { matches: [], nextId: 1 };
 }
 
 const saved = loadFromStorage();
