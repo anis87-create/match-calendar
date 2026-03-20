@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import ProfileModal from "./ProfileModal";
 import { getTeam } from "../utils/teams";
+import { badgeBg, badgeText, badgeBorder } from "../utils/colors";
 
 export default function Header() {
   const profile = useSelector((s) => s.profile);
@@ -23,9 +24,9 @@ export default function Header() {
               key={team.id}
               className="club-badge"
               style={{
-                background: team.color + "18",
-                color: team.color,
-                border: `2px solid ${team.color}`,
+                background: badgeBg(team.color),
+                color: badgeText(team.color),
+                border: `2px solid ${badgeBorder(team.color)}`,
               }}
               title={team.name}
             >
@@ -33,7 +34,7 @@ export default function Header() {
             </div>
           ))
         ) : (
-          <div className="club-badge" style={{ background: "#f0f0f0", color: "#aaa", border: "2px solid #ddd" }}>
+          <div className="club-badge" style={{ background: "#1a1a1a", color: "#aaa", border: "2px solid #333" }}>
             ?
           </div>
         )}
