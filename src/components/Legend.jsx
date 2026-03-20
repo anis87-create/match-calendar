@@ -5,7 +5,6 @@ export default function Legend() {
       <div className="legend-item"><div className="legend-dot" style={{ background: "#003399" }}></div>Incontournable</div>
       <div className="legend-item"><div className="legend-dot" style={{ background: "#1e8449" }}></div>À regarder</div>
       <div className="legend-item"><div className="legend-dot" style={{ background: "#f57f17" }}></div>Si disponible</div>
-      <div className="legend-item"><div className="legend-dot" style={{ background: "#ccc" }}></div>À sauter</div>
     </div>
   );
 }
