@@ -3,17 +3,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { addMatch, updateMatch } from "../features/matches/matchesSlice";
 import { clearEditing } from "../features/ui/uiSlice";
 import { getTeam } from "../utils/teams";
+import { leagueNames } from "../utils/leagues";
 
 const today = new Date().toISOString().split("T")[0];
-const emptyForm = { teams: "", league: "ucl", date: today, time: "", type: "", channel: "" };
 
 export default function AddMatchForm() {
   const dispatch = useDispatch();
   const editingId = useSelector((s) => s.ui.editingId);
   const matchToEdit = useSelector((s) => s.matches.items.find((m) => m.id === editingId));
   const favoriteTeams = useSelector((s) => s.profile.favoriteTeams);
+  const favoriteLeagues = useSelector((s) => s.profile.favoriteLeagues);
 
-  const [form, setForm] = useState({ ...emptyForm, type: favoriteTeams[0] || "important" });
+  const defaultLeague = favoriteLeagues[0] || "other";
+  const emptyForm = { teams: "", league: defaultLeague, date: today, time: "", type: favoriteTeams[0] || "important", channel: "" };
+
+  const [form, setForm] = useState(emptyForm);
 
   useEffect(() => {
     if (matchToEdit) {
@@ -26,7 +30,7 @@ export default function AddMatchForm() {
         channel: matchToEdit.channel || "",
       });
     } else {
-      setForm({ ...emptyForm, date: form.date, type: favoriteTeams[0] || "important" });
+      setForm((prev) => ({ ...emptyForm, date: prev.date }));
     }
   }, [matchToEdit]);
 
@@ -50,7 +54,7 @@ export default function AddMatchForm() {
 
   function handleCancel() {
     dispatch(clearEditing());
-    setForm({ ...emptyForm, type: favoriteTeams[0] || "important" });
+    setForm(emptyForm);
   }
 
   const isEditing = editingId !== null;
@@ -70,38 +74,14 @@ export default function AddMatchForm() {
         <div className="form-group">
           <label>Compétition</label>
           <select name="league" value={form.league} onChange={handleChange}>
-            <optgroup label="Coupes européennes">
-              <option value="ucl">Ligue des Champions UEFA</option>
-              <option value="uel">Europa League</option>
-              <option value="uecl">Conference League</option>
-            </optgroup>
-            <optgroup label="Championnats">
-              <option value="serie">Serie A (Italie)</option>
-              <option value="liga">Liga (Espagne)</option>
-              <option value="pl">Premier League (Angleterre)</option>
-              <option value="bundesliga">Bundesliga (Allemagne)</option>
-              <option value="ligue1fr">Ligue 1 (France)</option>
-              <option value="ligue1">Ligue 1 (Tunisie)</option>
-            </optgroup>
-            <optgroup label="Coupes nationales">
-              <option value="coppa">Coupe d'Italie</option>
-              <option value="coparey">Coupe du Roi (Espagne)</option>
-              <option value="facup">FA Cup (Angleterre)</option>
-              <option value="carabaocup">Carabao Cup (Angleterre)</option>
-              <option value="dfbpokal">Coupe d'Allemagne (DFB Pokal)</option>
-              <option value="coupefr">Coupe de France</option>
-              <option value="cuptun">Coupe de Tunisie</option>
-            </optgroup>
-            <optgroup label="Afrique &amp; Monde">
-              <option value="caf">Ligue des Champions CAF</option>
-              <option value="wcq_afr">Qualifications CDM — Afrique</option>
-              <option value="wcq_eur">Qualifications CDM — Europe</option>
-              <option value="wcq_asi">Qualifications CDM — Asie</option>
-              <option value="wcq_sam">Qualifications CDM — Amérique du Sud</option>
-              <option value="wc">Coupe du Monde</option>
-              <option value="friendly">Match amical</option>
-              <option value="other">Autre</option>
-            </optgroup>
+            {favoriteLeagues.length > 0 && (
+              <optgroup label="Mes compétitions">
+                {favoriteLeagues.map((l) => (
+                  <option key={l} value={l}>{leagueNames[l] ?? l}</option>
+                ))}
+              </optgroup>
+            )}
+            <option value="other">Autre compétition</option>
           </select>
         </div>
       </div>
