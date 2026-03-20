@@ -10,10 +10,11 @@ export default function MatchList() {
   const dispatch = useDispatch();
   const items = useSelector((s) => s.matches.items);
   const currentFilter = useSelector((s) => s.ui.currentFilter);
+  const profile = useSelector((s) => s.profile);
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
-  const plan = buildPlan(items);
+  const plan = buildPlan(items, profile);
   const today = new Date().toISOString().split("T")[0];
 
   const filtered = items.filter((m) => {

@@ -1,11 +1,13 @@
-export function getScore(match) {
+export function getScore(match, profile = {}) {
   const { type, league } = match;
-  // Incontournable : Inter, CAB, Tunisie, grands matchs, UCL/UEL
-  if (type === "inter" || type === "cab" || type === "tunisie") return 100;
+  const favoriteTeams = profile.favoriteTeams ?? [];
+  const favoriteLeagues = profile.favoriteLeagues ?? [];
+
+  // Incontournable : équipes favorites + matchs importants
+  if (favoriteTeams.includes(type)) return 100;
   if (type === "important") return 95;
-  if (["ucl", "uel"].includes(league)) return 90;
-  // À regarder : Serie A et Ligue 1 Tunisie
-  if (league === "serie" || league === "ligue1") return 60;
+  // À regarder : compétitions favorites
+  if (favoriteLeagues.includes(league)) return 60;
   // Si disponible : tout le reste
   return 30;
 }
@@ -30,7 +32,7 @@ export function getDayLimit(dateStr) {
 }
 
 // Returns a Map<matchId, { watch, score, prio }>
-export function buildPlan(matches) {
+export function buildPlan(matches, profile = {}) {
   const byDay = {};
   matches.forEach((m) => {
     if (!byDay[m.date]) byDay[m.date] = [];
@@ -40,9 +42,9 @@ export function buildPlan(matches) {
   const plan = new Map();
   Object.keys(byDay).forEach((date) => {
     const limit = getDayLimit(date);
-    const sorted = [...byDay[date]].sort((a, b) => getScore(b) - getScore(a));
+    const sorted = [...byDay[date]].sort((a, b) => getScore(b, profile) - getScore(a, profile));
     sorted.forEach((m, i) => {
-      const score = getScore(m);
+      const score = getScore(m, profile);
       plan.set(m.id, {
         watch: i < limit,
         score,
