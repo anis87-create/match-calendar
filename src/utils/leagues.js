@@ -1,0 +1,69 @@
+export const leagueNames = {
+  ucl: "Ligue des Champions",
+  uel: "Europa League",
+  uecl: "Conference League",
+  serie: "Serie A",
+  liga: "Liga",
+  pl: "Premier League",
+  bundesliga: "Bundesliga",
+  ligue1fr: "Ligue 1 (FR)",
+  ligue1: "Ligue 1 (TN)",
+  coppa: "Coupe d'Italie",
+  coparey: "Coupe du Roi",
+  facup: "FA Cup",
+  carabaocup: "Carabao Cup",
+  dfbpokal: "DFB Pokal",
+  coupefr: "Coupe de France",
+  cuptun: "Coupe de Tunisie",
+  caf: "Champ. CAF",
+  wcq_afr: "Qualif. CDM Afrique",
+  wcq_eur: "Qualif. CDM Europe",
+  wcq_asi: "Qualif. CDM Asie",
+  wcq_sam: "Qualif. CDM Amérique du Sud",
+  wc: "Coupe du Monde",
+  friendly: "Match amical",
+  other: "Autre",
+};
+
+export const leaguePillClass = {
+  ucl: "pill-ucl",
+  uel: "pill-uel",
+  uecl: "pill-uecl",
+  serie: "pill-serie",
+  liga: "pill-liga",
+  pl: "pill-pl",
+  bundesliga: "pill-bundesliga",
+  ligue1fr: "pill-ligue1fr",
+  ligue1: "pill-ligue1",
+  coppa: "pill-coppa",
+  coparey: "pill-coparey",
+  facup: "pill-facup",
+  carabaocup: "pill-carabaocup",
+  dfbpokal: "pill-dfbpokal",
+  coupefr: "pill-coupefr",
+  cuptun: "pill-cuptun",
+  caf: "pill-caf",
+  wcq_afr: "pill-wcq",
+  wcq_eur: "pill-wcq",
+  wcq_asi: "pill-wcq",
+  wcq_sam: "pill-wcq",
+  wc: "pill-wc",
+  friendly: "pill-friendly",
+  other: "pill-wcq",
+};
+
+export const typePillClass = {
+  inter: "pill-inter",
+  cab: "pill-cab",
+  tunisie: "pill-tunisie",
+  important: "pill-important",
+};
+
+export const typeLabel = {
+  inter: "Inter",
+  cab: "CAB",
+  tunisie: "Tunisie",
+  important: "Important",
+};
+
+export const months = ["Jan","Fév","Mar","Avr","Mai","Juin","Juil","Août","Sep","Oct","Nov","Déc"];
