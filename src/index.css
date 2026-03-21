@@ -99,7 +99,7 @@ body{font-family:system-ui,sans-serif;background:#f4f4f4;color:#111;padding:1.5r
 .filters{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;}
 .filter-btn{font-size:12px;padding:5px 13px;border-radius:999px;border:1px solid #ddd;background:#fff;color:#666;cursor:pointer;}
 .filter-btn.active{background:#003399;color:#fff;border-color:#003399;}
-.match-list{display:flex;flex-direction:column;gap:8px;min-height:60px;}
+.match-list{display:flex;flex-direction:column;gap:12px;min-height:60px;}
 .day-group{margin-bottom:4px;}
 .day-group-title{font-size:12px;font-weight:600;color:#888;margin-bottom:6px;padding-left:4px;display:flex;align-items:center;gap:8px;}
 .day-limit-badge{font-size:10px;padding:2px 8px;border-radius:999px;font-weight:500;}
