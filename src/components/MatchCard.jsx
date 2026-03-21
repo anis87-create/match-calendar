@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { deleteMatch, toggleWatched } from "../features/matches/matchesSlice";
+import { deleteMatch } from "../features/matches/matchesSlice";
 import { setEditingId } from "../features/ui/uiSlice";
 import { leagueNames } from "../utils/leagues";
 import { prioText, prioClass } from "../utils/scoring";
@@ -71,12 +71,6 @@ export default function MatchCard({ match, plan }) {
         <span className="pill" style={{ fontSize: "10px", background: "#f0f0f0", color: "#666" }}>
           {leagueNames[match.league] ?? match.league}
         </span>
-        <button
-          className={`watched-btn${match.watched ? " done" : ""}`}
-          onClick={() => dispatch(toggleWatched(match.id))}
-        >
-          {match.watched ? "Regardé" : "À regarder"}
-        </button>
       </div>
 
       <div className="action-btns">
