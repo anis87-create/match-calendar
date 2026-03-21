@@ -205,6 +205,7 @@ export const TEAMS_BY_GROUP = [
   { group: "Maroc", leagueId: "maroc", teams: MAROC },
   { group: "Égypte", leagueId: "egypte", teams: EGYPTE },
   { group: "Équipes nationales", leagueId: "national", teams: NATIONALES },
+  { group: "Autre", leagueId: "autre", teams: [{ id: "autre", name: "Autre", color: "#888888" }] },
 ];
 
 export const ALL_TEAMS = TEAMS_BY_GROUP.flatMap((g) =>
