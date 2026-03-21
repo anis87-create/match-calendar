@@ -7,8 +7,6 @@ export default function Stats() {
   const total = items.length;
   const favorites = items.filter((m) => favoriteTeams.includes(m.type)).length;
   const important = items.filter((m) => m.type === "important").length;
-  const watched = items.filter((m) => m.watched).length;
-
   return (
     <div className="stats">
       <div className="stat-card">
@@ -22,10 +20,6 @@ export default function Stats() {
       <div className="stat-card">
         <div className="stat-num">{important}</div>
         <div className="stat-label">Grands matchs</div>
-      </div>
-      <div className="stat-card">
-        <div className="stat-num">{watched}</div>
-        <div className="stat-label">Regardés</div>
       </div>
     </div>
   );
