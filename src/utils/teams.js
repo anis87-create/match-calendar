@@ -95,7 +95,7 @@ const BUNDESLIGA = [
 
 const LIGUE1_FR = [
   { id: "paris_sg",      name: "Paris Saint-Germain",    color: "#003399", logo: f("fr") },
-  { id: "monaco",        name: "AS Monaco",              color: "#CC0000", logo: f("mc") }, // Monaco ≠ France
+  { id: "monaco",        name: "AS Monaco",              color: "#CC0000", logo: f("fr") },
   { id: "lille",         name: "LOSC Lille",             color: "#CC0000", logo: f("fr") },
   { id: "nice",          name: "OGC Nice",               color: "#CC0000", logo: f("fr") },
   { id: "marseille",     name: "Olympique de Marseille", color: "#2FAEE0", logo: f("fr") },

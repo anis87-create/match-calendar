@@ -8,24 +8,73 @@ import TeamLogo from "./TeamLogo";
 
 const today = new Date().toISOString().split("T")[0];
 
-// Pays les plus courants pour les clubs inconnus
-const POPULAR_COUNTRIES = [
-  { cc: "tn", name: "Tunisie" }, { cc: "dz", name: "Algérie" },
-  { cc: "ma", name: "Maroc" },   { cc: "eg", name: "Égypte" },
-  { cc: "sn", name: "Sénégal" }, { cc: "ng", name: "Nigeria" },
-  { cc: "cm", name: "Cameroun" },{ cc: "gh", name: "Ghana" },
-  { cc: "sa", name: "Arabie S." },{ cc: "qa", name: "Qatar" },
-  { cc: "ae", name: "EAU" },     { cc: "iq", name: "Irak" },
-  { cc: "lb", name: "Liban" },   { cc: "ps", name: "Palestine" },
-  { cc: "sy", name: "Syrie" },   { cc: "jo", name: "Jordanie" },
-  { cc: "fr", name: "France" },  { cc: "es", name: "Espagne" },
-  { cc: "de", name: "Allemagne" },{ cc: "gb-eng", name: "Angleterre" },
-  { cc: "it", name: "Italie" },  { cc: "pt", name: "Portugal" },
-  { cc: "nl", name: "Pays-Bas" },{ cc: "be", name: "Belgique" },
-  { cc: "br", name: "Brésil" },  { cc: "ar", name: "Argentine" },
-  { cc: "us", name: "USA" },     { cc: "mx", name: "Mexique" },
-  { cc: "jp", name: "Japon" },   { cc: "kr", name: "Corée S." },
-  { cc: "za", name: "Afr. Sud" },{ cc: "ci", name: "Côte d'Iv." },
+// Tous les pays disponibles pour les clubs inconnus
+const ALL_COUNTRIES = [
+  // Afrique
+  { cc: "tn", name: "Tunisie" },       { cc: "dz", name: "Algérie" },
+  { cc: "ma", name: "Maroc" },         { cc: "eg", name: "Égypte" },
+  { cc: "sn", name: "Sénégal" },       { cc: "ng", name: "Nigeria" },
+  { cc: "cm", name: "Cameroun" },      { cc: "gh", name: "Ghana" },
+  { cc: "ci", name: "Côte d'Ivoire" }, { cc: "ml", name: "Mali" },
+  { cc: "za", name: "Afrique du Sud" },{ cc: "cd", name: "RD Congo" },
+  { cc: "gn", name: "Guinée" },        { cc: "zw", name: "Zimbabwe" },
+  { cc: "ly", name: "Libye" },         { cc: "sd", name: "Soudan" },
+  { cc: "et", name: "Éthiopie" },      { cc: "ke", name: "Kenya" },
+  { cc: "ug", name: "Ouganda" },       { cc: "tz", name: "Tanzanie" },
+  { cc: "zm", name: "Zambie" },        { cc: "ao", name: "Angola" },
+  { cc: "mz", name: "Mozambique" },    { cc: "bf", name: "Burkina Faso" },
+  { cc: "cv", name: "Cap-Vert" },      { cc: "gm", name: "Gambie" },
+  { cc: "km", name: "Comores" },       { cc: "gq", name: "Guinée Éq." },
+  { cc: "bj", name: "Bénin" },         { cc: "ga", name: "Gabon" },
+  { cc: "mr", name: "Mauritanie" },    { cc: "cg", name: "Congo" },
+  { cc: "tg", name: "Togo" },          { cc: "mg", name: "Madagascar" },
+  { cc: "mu", name: "Maurice" },       { cc: "sc", name: "Seychelles" },
+  { cc: "rw", name: "Rwanda" },        { cc: "bi", name: "Burundi" },
+  { cc: "mw", name: "Malawi" },        { cc: "ne", name: "Niger" },
+  { cc: "lr", name: "Libéria" },       { cc: "sl", name: "Sierra Leone" },
+  { cc: "gw", name: "Guinée-Bissau" }, { cc: "dj", name: "Djibouti" },
+  // Monde arabe & Asie
+  { cc: "sa", name: "Arabie Saoudite" },{ cc: "qa", name: "Qatar" },
+  { cc: "ae", name: "Émirats Arabes" }, { cc: "iq", name: "Irak" },
+  { cc: "lb", name: "Liban" },          { cc: "ps", name: "Palestine" },
+  { cc: "sy", name: "Syrie" },          { cc: "jo", name: "Jordanie" },
+  { cc: "kw", name: "Koweït" },         { cc: "bh", name: "Bahreïn" },
+  { cc: "om", name: "Oman" },           { cc: "ye", name: "Yémen" },
+  { cc: "jp", name: "Japon" },          { cc: "kr", name: "Corée du Sud" },
+  { cc: "cn", name: "Chine" },          { cc: "in", name: "Inde" },
+  { cc: "ir", name: "Iran" },           { cc: "au", name: "Australie" },
+  { cc: "uz", name: "Ouzbékistan" },    { cc: "vn", name: "Viêt Nam" },
+  { cc: "th", name: "Thaïlande" },      { cc: "id", name: "Indonésie" },
+  { cc: "kp", name: "Corée du Nord" },
+  // Europe
+  { cc: "fr", name: "France" },     { cc: "es", name: "Espagne" },
+  { cc: "de", name: "Allemagne" },  { cc: "gb-eng", name: "Angleterre" },
+  { cc: "it", name: "Italie" },     { cc: "pt", name: "Portugal" },
+  { cc: "nl", name: "Pays-Bas" },   { cc: "be", name: "Belgique" },
+  { cc: "hr", name: "Croatie" },    { cc: "dk", name: "Danemark" },
+  { cc: "at", name: "Autriche" },   { cc: "ch", name: "Suisse" },
+  { cc: "se", name: "Suède" },      { cc: "no", name: "Norvège" },
+  { cc: "pl", name: "Pologne" },    { cc: "ua", name: "Ukraine" },
+  { cc: "cz", name: "Tchéquie" },   { cc: "rs", name: "Serbie" },
+  { cc: "gb-sct", name: "Écosse" }, { cc: "gb-wls", name: "Pays de Galles" },
+  { cc: "ie", name: "Irlande" },    { cc: "gr", name: "Grèce" },
+  { cc: "tr", name: "Turquie" },    { cc: "ro", name: "Roumanie" },
+  { cc: "hu", name: "Hongrie" },    { cc: "sk", name: "Slovaquie" },
+  { cc: "si", name: "Slovénie" },   { cc: "al", name: "Albanie" },
+  { cc: "ba", name: "Bosnie" },     { cc: "me", name: "Monténégro" },
+  { cc: "mk", name: "Macédoine" },  { cc: "is", name: "Islande" },
+  { cc: "fi", name: "Finlande" },   { cc: "ge", name: "Géorgie" },
+  { cc: "il", name: "Israël" },     { cc: "xk", name: "Kosovo" },
+  // Amériques
+  { cc: "br", name: "Brésil" },     { cc: "ar", name: "Argentine" },
+  { cc: "uy", name: "Uruguay" },    { cc: "cl", name: "Chili" },
+  { cc: "co", name: "Colombie" },   { cc: "pe", name: "Pérou" },
+  { cc: "ec", name: "Équateur" },   { cc: "ve", name: "Venezuela" },
+  { cc: "py", name: "Paraguay" },   { cc: "bo", name: "Bolivie" },
+  { cc: "us", name: "USA" },        { cc: "mx", name: "Mexique" },
+  { cc: "ca", name: "Canada" },     { cc: "cr", name: "Costa Rica" },
+  { cc: "hn", name: "Honduras" },   { cc: "pa", name: "Panama" },
+  { cc: "jm", name: "Jamaïque" },   { cc: "ht", name: "Haïti" },
 ];
 
 const FLAG_BASE = "https://flagicons.lipis.dev/flags/1x1/";
@@ -43,6 +92,7 @@ function TeamSelect({ value, onChange, placeholder }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [pendingCustom, setPendingCustom] = useState(null); // {name, cc}
+  const [countryQuery, setCountryQuery] = useState("");
   const ref = useRef(null);
 
   const selected = resolveTeam(value);
@@ -61,6 +111,7 @@ function TeamSelect({ value, onChange, placeholder }) {
       if (ref.current && !ref.current.contains(e.target)) {
         setOpen(false);
         setPendingCustom(null);
+        setCountryQuery("");
       }
     }
     document.addEventListener("mousedown", handleOutside);
@@ -112,15 +163,25 @@ function TeamSelect({ value, onChange, placeholder }) {
           {pendingCustom ? (
             <div className="custom-country-picker">
               <div className="custom-country-title">
-                <strong>"{pendingCustom.name}"</strong> — choisir le pays&nbsp;:
+                <strong>"{pendingCustom.name}"</strong> — pays&nbsp;:
               </div>
+              <input
+                className="team-select-search"
+                value={countryQuery}
+                onChange={(e) => setCountryQuery(e.target.value)}
+                placeholder="Rechercher un pays..."
+                autoFocus
+                onClick={(e) => e.stopPropagation()}
+              />
               <div className="custom-country-grid">
-                {POPULAR_COUNTRIES.map(({ cc, name }) => (
+                {ALL_COUNTRIES.filter((c) =>
+                  c.name.toLowerCase().includes(countryQuery.toLowerCase())
+                ).map(({ cc, name }) => (
                   <button
                     key={cc}
                     className="custom-country-btn"
                     title={name}
-                    onClick={() => confirmCustom(cc)}
+                    onClick={() => { confirmCustom(cc); setCountryQuery(""); }}
                   >
                     <img
                       src={`${FLAG_BASE}${cc}.svg`}
@@ -129,10 +190,11 @@ function TeamSelect({ value, onChange, placeholder }) {
                       height={19}
                       style={{ objectFit: "cover", borderRadius: 2 }}
                     />
+                    <span className="custom-country-name">{name}</span>
                   </button>
                 ))}
               </div>
-              <button className="custom-country-skip" onClick={() => confirmCustom(null)}>
+              <button className="custom-country-skip" onClick={() => { confirmCustom(null); setCountryQuery(""); }}>
                 Sans drapeau
               </button>
             </div>
