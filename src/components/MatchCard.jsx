@@ -6,6 +6,7 @@ import { setEditingId } from "../features/ui/uiSlice";
 import { leagueNames } from "../utils/leagues";
 import { prioText, prioClass } from "../utils/scoring";
 import { ALL_TEAMS, getTeam, resolveTeam } from "../utils/teams";
+import ChannelBadge from "./ChannelBadge";
 
 const SKIP = new Set(["de", "du", "d", "el", "al", "le", "la", "les", "the", "of", "et", "des"]);
 
@@ -116,10 +117,8 @@ export default function MatchCard({ match, plan }) {
           <div className="match-teams">{match.teams}</div>
         )}
         <div className="match-meta">
-          {leagueNames[match.league] ?? match.league}{match.channel ? ` · ${match.channel}` : ""}
-        </div>
-        <div className={`prio-label ${prioClass[prio]}`}>
-          {watch ? "✔ " : "✖ "}{prioText[prio]}
+          {leagueNames[match.league] ?? match.league}
+          {match.channel && <ChannelBadge channelName={match.channel} />}
         </div>
       </div>
 
