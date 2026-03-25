@@ -61,6 +61,7 @@ export default function MatchCard({ match, plan }) {
   const concernedIsClub =
     match.type &&
     match.type !== "important" &&
+    match.type !== "autre" &&
     !match.type.startsWith("nat_") &&
     !!getTeam(match.type);
   const showFlags = !concernedIsClub;
