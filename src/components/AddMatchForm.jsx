@@ -8,12 +8,45 @@ import TeamLogo from "./TeamLogo";
 
 const today = new Date().toISOString().split("T")[0];
 
+// Pays les plus courants pour les clubs inconnus
+const POPULAR_COUNTRIES = [
+  { cc: "tn", name: "Tunisie" }, { cc: "dz", name: "Algérie" },
+  { cc: "ma", name: "Maroc" },   { cc: "eg", name: "Égypte" },
+  { cc: "sn", name: "Sénégal" }, { cc: "ng", name: "Nigeria" },
+  { cc: "cm", name: "Cameroun" },{ cc: "gh", name: "Ghana" },
+  { cc: "sa", name: "Arabie S." },{ cc: "qa", name: "Qatar" },
+  { cc: "ae", name: "EAU" },     { cc: "iq", name: "Irak" },
+  { cc: "lb", name: "Liban" },   { cc: "ps", name: "Palestine" },
+  { cc: "sy", name: "Syrie" },   { cc: "jo", name: "Jordanie" },
+  { cc: "fr", name: "France" },  { cc: "es", name: "Espagne" },
+  { cc: "de", name: "Allemagne" },{ cc: "gb-eng", name: "Angleterre" },
+  { cc: "it", name: "Italie" },  { cc: "pt", name: "Portugal" },
+  { cc: "nl", name: "Pays-Bas" },{ cc: "be", name: "Belgique" },
+  { cc: "br", name: "Brésil" },  { cc: "ar", name: "Argentine" },
+  { cc: "us", name: "USA" },     { cc: "mx", name: "Mexique" },
+  { cc: "jp", name: "Japon" },   { cc: "kr", name: "Corée S." },
+  { cc: "za", name: "Afr. Sud" },{ cc: "ci", name: "Côte d'Iv." },
+];
+
+const FLAG_BASE = "https://flagicons.lipis.dev/flags/1x1/";
+
+// Décode un ID custom : "__CC|Nom" ou "__Nom"
+function parseCustomId(id) {
+  if (!id?.startsWith("__")) return null;
+  const rest = id.slice(2);
+  const pipe = rest.indexOf("|");
+  if (pipe > -1) return { cc: rest.slice(0, pipe), name: rest.slice(pipe + 1) };
+  return { cc: null, name: rest };
+}
+
 function TeamSelect({ value, onChange, placeholder }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [pendingCustom, setPendingCustom] = useState(null); // {name, cc}
   const ref = useRef(null);
 
   const selected = resolveTeam(value);
+  const custom = parseCustomId(value);
 
   const filtered = TEAMS_BY_GROUP.map((g) => ({
     ...g,
@@ -23,38 +56,48 @@ function TeamSelect({ value, onChange, placeholder }) {
     ),
   })).filter((g) => g.teams.length > 0);
 
-  const hasResults = filtered.some((g) => g.teams.length > 0);
-
   useEffect(() => {
     function handleOutside(e) {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target)) {
+        setOpen(false);
+        setPendingCustom(null);
+      }
     }
     document.addEventListener("mousedown", handleOutside);
     return () => document.removeEventListener("mousedown", handleOutside);
   }, []);
 
-  function selectCustom() {
+  function startCustom() {
     if (!query.trim()) return;
-    onChange("__" + query.trim());
-    setOpen(false);
+    setPendingCustom({ name: query.trim(), cc: null });
     setQuery("");
   }
 
+  function confirmCustom(cc) {
+    const name = pendingCustom.name;
+    onChange(cc ? `__${cc}|${name}` : `__${name}`);
+    setOpen(false);
+    setPendingCustom(null);
+  }
+
   function handleKeyDown(e) {
-    if (e.key === "Enter") selectCustom();
-    if (e.key === "Escape") setOpen(false);
+    if (e.key === "Enter" && !pendingCustom) startCustom();
+    if (e.key === "Escape") { setOpen(false); setPendingCustom(null); }
   }
 
   return (
     <div className="team-select" ref={ref}>
       <div
         className={`team-select-trigger${open ? " open" : ""}`}
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => { setOpen((o) => !o); setPendingCustom(null); }}
       >
         {selected ? (
           <>
             <TeamLogo team={selected} size={20} />
-            <span className="team-select-name">{selected.name}</span>
+            <span className="team-select-name">
+              {selected.name}
+              {custom && !custom.cc && <span className="team-custom-badge">✏️</span>}
+            </span>
           </>
         ) : (
           <span className="team-select-placeholder">{placeholder}</span>
@@ -64,50 +107,84 @@ function TeamSelect({ value, onChange, placeholder }) {
 
       {open && (
         <div className="team-select-dropdown">
-          <input
-            className="team-select-search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Rechercher ou saisir un nom..."
-            autoFocus
-            onClick={(e) => e.stopPropagation()}
-          />
 
-          <div className="team-select-list">
-            {/* Option saisie libre */}
-            {query.trim() && (
-              <div className="team-option team-option-custom" onClick={selectCustom}>
-                <span className="team-custom-icon">✏️</span>
-                <span>Utiliser <strong>"{query.trim()}"</strong></span>
+          {/* Étape 2 : choisir le pays pour une équipe inconnue */}
+          {pendingCustom ? (
+            <div className="custom-country-picker">
+              <div className="custom-country-title">
+                <strong>"{pendingCustom.name}"</strong> — choisir le pays&nbsp;:
               </div>
-            )}
-
-            {filtered.map((g) => (
-              <div key={g.group}>
-                <div className="team-group-header">{g.group}</div>
-                {g.teams.map((t) => (
-                  <div
-                    key={t.id}
-                    className={`team-option${value === t.id ? " selected" : ""}`}
-                    onClick={() => {
-                      onChange(t.id);
-                      setOpen(false);
-                      setQuery("");
-                    }}
+              <div className="custom-country-grid">
+                {POPULAR_COUNTRIES.map(({ cc, name }) => (
+                  <button
+                    key={cc}
+                    className="custom-country-btn"
+                    title={name}
+                    onClick={() => confirmCustom(cc)}
                   >
-                    <TeamLogo team={t} size={18} />
-                    <span>{t.name}</span>
-                    {value === t.id && <span className="team-option-check">✓</span>}
-                  </div>
+                    <img
+                      src={`${FLAG_BASE}${cc}.svg`}
+                      alt={name}
+                      width={28}
+                      height={19}
+                      style={{ objectFit: "cover", borderRadius: 2 }}
+                    />
+                  </button>
                 ))}
               </div>
-            ))}
+              <button className="custom-country-skip" onClick={() => confirmCustom(null)}>
+                Sans drapeau
+              </button>
+            </div>
+          ) : (
+            <>
+              {/* Étape 1 : recherche + saisie libre */}
+              <input
+                className="team-select-search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Rechercher ou saisir un nom..."
+                autoFocus
+                onClick={(e) => e.stopPropagation()}
+              />
 
-            {!hasResults && !query.trim() && (
-              <div className="team-select-empty">Aucune équipe trouvée</div>
-            )}
-          </div>
+              <div className="team-select-list">
+                {query.trim() && (
+                  <div className="team-option team-option-custom" onClick={startCustom}>
+                    <span className="team-custom-icon">✏️</span>
+                    <span>Utiliser <strong>"{query.trim()}"</strong></span>
+                    <span className="team-option-hint">→ choisir pays</span>
+                  </div>
+                )}
+
+                {filtered.map((g) => (
+                  <div key={g.group}>
+                    <div className="team-group-header">{g.group}</div>
+                    {g.teams.map((t) => (
+                      <div
+                        key={t.id}
+                        className={`team-option${value === t.id ? " selected" : ""}`}
+                        onClick={() => {
+                          onChange(t.id);
+                          setOpen(false);
+                          setQuery("");
+                        }}
+                      >
+                        <TeamLogo team={t} size={18} />
+                        <span>{t.name}</span>
+                        {value === t.id && <span className="team-option-check">✓</span>}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+
+                {!filtered.length && !query.trim() && (
+                  <div className="team-select-empty">Saisir un nom pour rechercher</div>
+                )}
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>
@@ -163,7 +240,6 @@ export default function AddMatchForm() {
       alert("Veuillez remplir la date et l'heure");
       return;
     }
-
     const t1 = resolveTeam(form.team1Id);
     const t2 = resolveTeam(form.team2Id);
     const teamsStr = `${t1.name} vs ${t2.name}`;
@@ -196,7 +272,6 @@ export default function AddMatchForm() {
         )}
       </div>
 
-      {/* Sélecteurs équipes */}
       <div className="form-teams-row">
         <div className="form-group">
           <label>Équipe 1</label>
@@ -210,9 +285,9 @@ export default function AddMatchForm() {
         <div className="form-vs-separator">
           {t1 && t2 ? (
             <div className="form-vs-preview">
-              <TeamLogo team={t1} size={26} />
+              <TeamLogo team={t1} size={24} />
               <span>vs</span>
-              <TeamLogo team={t2} size={26} />
+              <TeamLogo team={t2} size={24} />
             </div>
           ) : (
             <span className="form-vs-label">vs</span>

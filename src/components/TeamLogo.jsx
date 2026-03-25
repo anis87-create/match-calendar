@@ -10,14 +10,21 @@ export default function TeamLogo({ team, size = 24 }) {
       <img
         src={team.logo}
         alt={team.name}
-        width={size}
-        height={size}
-        style={{ objectFit: "contain", flexShrink: 0, borderRadius: 2, display: "block" }}
+        style={{
+          width: Math.round(size * 1.5),
+          height: size,
+          objectFit: "cover",
+          borderRadius: 3,
+          flexShrink: 0,
+          display: "inline-block",
+          verticalAlign: "middle",
+        }}
         onError={() => setImgError(true)}
       />
     );
   }
 
+  // Fallback : cercle coloré avec initiale
   return (
     <span
       style={{
