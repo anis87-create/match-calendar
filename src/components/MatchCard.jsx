@@ -54,6 +54,11 @@ export default function MatchCard({ match, plan }) {
   const team1 = match.team1Id ? resolveTeam(match.team1Id) : null;
   const team2 = match.team2Id ? resolveTeam(match.team2Id) : null;
 
+  // Afficher les drapeaux seulement si l'équipe concernée est nationale
+  // (ou si c'est un "grand match" sans équipe définie)
+  const concernedTeam = getTeam(match.type);
+  const showFlags = !concernedTeam || match.type?.startsWith("nat_");
+
   const pillStyle = { background: teamColor + "18", color: teamColor, border: `1px solid ${teamColor}33` };
   const cardBorderStyle = isEditing ? {} : { borderLeft: `3px solid ${teamColor}` };
 
@@ -78,11 +83,11 @@ export default function MatchCard({ match, plan }) {
       <div className="match-info">
         {team1 && team2 ? (
           <div className="match-teams-logos">
-            {team1.id?.startsWith("nat_") && <TeamLogo team={team1} size={18} />}
+            {showFlags && <TeamLogo team={team1} size={18} />}
             <span className="match-team-name">{shortName(team1.name)}</span>
             <span className="match-vs">vs</span>
             <span className="match-team-name">{shortName(team2.name)}</span>
-            {team2.id?.startsWith("nat_") && <TeamLogo team={team2} size={18} />}
+            {showFlags && <TeamLogo team={team2} size={18} />}
           </div>
         ) : (
           <div className="match-teams">{match.teams}</div>
