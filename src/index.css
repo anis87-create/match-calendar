@@ -166,3 +166,38 @@ body{font-family:system-ui,sans-serif;background:#f4f4f4;color:#111;padding:1.5r
 .watched-btn{background:none;border:1px solid #ddd;border-radius:999px;font-size:11px;padding:2px 8px;cursor:pointer;color:#666;}
 .watched-btn.done{background:#eafaf1;color:#1e8449;border-color:transparent;}
 .hint{font-size:11px;color:#bbb;margin-bottom:8px;}
+
+/* ── Team selector ── */
+.teams-row{grid-template-columns:1fr auto 1fr;align-items:end;}
+.form-vs-separator{display:flex;align-items:flex-end;justify-content:center;padding-bottom:7px;}
+.form-vs-label{font-size:13px;color:#aaa;font-weight:500;}
+.form-vs-preview{display:flex;align-items:center;gap:6px;}
+.form-vs-preview span{font-size:11px;color:#888;font-weight:600;}
+.team-select{position:relative;width:100%;}
+.team-select-trigger{display:flex;align-items:center;gap:7px;font-size:13px;padding:7px 10px;border-radius:8px;border:1px solid #ddd;background:#fff;color:inherit;width:100%;cursor:pointer;user-select:none;transition:border-color .15s;}
+.team-select-trigger:hover,.team-select-trigger.open{border-color:#003399;}
+.team-select-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.team-select-placeholder{flex:1;color:#aaa;}
+.team-select-arrow{font-size:10px;color:#aaa;flex-shrink:0;}
+.team-select-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:200;background:#fff;border:1px solid #ddd;border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.13);overflow:hidden;}
+.team-select-search{width:100%;font-size:12px;padding:8px 12px;border:none;border-bottom:1px solid #eee;outline:none;background:#fafafa;color:inherit;}
+.team-select-list{max-height:220px;overflow-y:auto;}
+.team-group-header{font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;padding:6px 12px 3px;letter-spacing:.5px;background:#fafafa;position:sticky;top:0;}
+.team-option{display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:13px;transition:background .1s;}
+.team-option:hover{background:#f0f4ff;}
+.team-option.selected{background:#eef2ff;}
+.team-option-check{margin-left:auto;color:#003399;font-size:11px;font-weight:700;}
+
+/* ── Match card logos ── */
+.match-teams-logos{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:13px;font-weight:600;}
+.match-team-name{max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.match-vs{font-size:10px;color:#aaa;font-weight:500;flex-shrink:0;}
+
+@media(prefers-color-scheme:dark){
+  .team-select-trigger{background:#2a2a2a;border-color:#444;color:#f0f0f0;}
+  .team-select-dropdown{background:#2a2a2a;border-color:#444;}
+  .team-select-search{background:#232323;border-color:#333;color:#f0f0f0;}
+  .team-group-header{background:#232323;}
+  .team-option:hover{background:#333;}
+  .team-option.selected{background:#1e2233;}
+}

@@ -7,6 +7,7 @@ import { leagueNames } from "../utils/leagues";
 import { prioText, prioClass } from "../utils/scoring";
 import { getTeam } from "../utils/teams";
 import { months } from "../utils/leagues";
+import TeamLogo from "./TeamLogo";
 
 export default function MatchCard({ match, plan }) {
   const dispatch = useDispatch();
@@ -26,16 +27,18 @@ export default function MatchCard({ match, plan }) {
   const prio = plan?.prio ?? 3;
   const watch = plan?.watch ?? false;
 
-  // Resolve team info
+  // Resolve team info (type = favorite team)
   const team = getTeam(match.type);
   const isImportant = match.type === "important";
   const teamColor = team ? team.color : isImportant ? "#e24b4a" : "#999";
   const teamName = team ? team.name : isImportant ? "Grand match" : "Autre";
 
+  // Team 1 & 2 logos
+  const team1 = match.team1Id ? getTeam(match.team1Id) : null;
+  const team2 = match.team2Id ? getTeam(match.team2Id) : null;
+
   const pillStyle = { background: teamColor + "18", color: teamColor, border: `1px solid ${teamColor}33` };
-  const cardBorderStyle = isEditing
-    ? {}
-    : { borderLeft: `3px solid ${teamColor}` };
+  const cardBorderStyle = isEditing ? {} : { borderLeft: `3px solid ${teamColor}` };
 
   function handleEdit() {
     dispatch(setEditingId(match.id));
@@ -56,7 +59,17 @@ export default function MatchCard({ match, plan }) {
       </div>
 
       <div className="match-info">
-        <div className="match-teams">{match.teams}</div>
+        {team1 && team2 ? (
+          <div className="match-teams-logos">
+            <TeamLogo team={team1} size={22} />
+            <span className="match-team-name">{team1.name}</span>
+            <span className="match-vs">vs</span>
+            <TeamLogo team={team2} size={22} />
+            <span className="match-team-name">{team2.name}</span>
+          </div>
+        ) : (
+          <div className="match-teams">{match.teams}</div>
+        )}
         <div className="match-meta">
           {leagueNames[match.league] ?? match.league}{match.channel ? ` · ${match.channel}` : ""}
         </div>
