@@ -6,6 +6,23 @@ import { setEditingId } from "../features/ui/uiSlice";
 import { leagueNames } from "../utils/leagues";
 import { prioText, prioClass } from "../utils/scoring";
 import { getTeam, resolveTeam } from "../utils/teams";
+
+const SKIP = new Set(["de", "du", "d", "el", "al", "le", "la", "les", "the", "of", "et", "des"]);
+
+function norm(s) {
+  return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[''']/g, "");
+}
+
+function shortName(name) {
+  if (!name || name.length <= 13) return name || "";
+  const parts = name.split(/[\s\-\/]+/);
+  if (parts.length <= 1) return name;
+  const abbr = parts
+    .filter(w => !SKIP.has(norm(w)))
+    .map(w => w[0].toUpperCase())
+    .join("");
+  return abbr || name.slice(0, 5);
+}
 import { months } from "../utils/leagues";
 import TeamLogo from "./TeamLogo";
 
@@ -61,11 +78,11 @@ export default function MatchCard({ match, plan }) {
       <div className="match-info">
         {team1 && team2 ? (
           <div className="match-teams-logos">
-            {team1.id?.startsWith("nat_") && <TeamLogo team={team1} size={18} />}
-            <span className="match-team-name">{team1.name}</span>
+            <TeamLogo team={team1} size={18} />
+            <span className="match-team-name">{shortName(team1.name)}</span>
             <span className="match-vs">vs</span>
-            <span className="match-team-name">{team2.name}</span>
-            {team2.id?.startsWith("nat_") && <TeamLogo team={team2} size={18} />}
+            <span className="match-team-name">{shortName(team2.name)}</span>
+            <TeamLogo team={team2} size={18} />
           </div>
         ) : (
           <div className="match-teams">{match.teams}</div>
