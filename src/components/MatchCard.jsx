@@ -54,10 +54,16 @@ export default function MatchCard({ match, plan }) {
   const team1 = match.team1Id ? resolveTeam(match.team1Id) : null;
   const team2 = match.team2Id ? resolveTeam(match.team2Id) : null;
 
-  // Afficher les drapeaux seulement si l'équipe concernée est nationale
-  // (ou si c'est un "grand match" sans équipe définie)
-  const concernedTeam = getTeam(match.type);
-  const showFlags = !concernedTeam || match.type?.startsWith("nat_");
+  // Pas de drapeaux UNIQUEMENT quand l'équipe concernée est un CLUB (ni national ni "important")
+  // → type = club favori (est, inter…) : pas de drapeaux
+  // → type = équipe nationale (nat_*) : drapeaux
+  // → type = "important" ou inconnu  : drapeaux
+  const concernedIsClub =
+    match.type &&
+    match.type !== "important" &&
+    !match.type.startsWith("nat_") &&
+    !!getTeam(match.type);
+  const showFlags = !concernedIsClub;
 
   const pillStyle = { background: teamColor + "18", color: teamColor, border: `1px solid ${teamColor}33` };
   const cardBorderStyle = isEditing ? {} : { borderLeft: `3px solid ${teamColor}` };
