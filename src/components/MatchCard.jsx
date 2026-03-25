@@ -5,12 +5,24 @@ import { deleteMatch } from "../features/matches/matchesSlice";
 import { setEditingId } from "../features/ui/uiSlice";
 import { leagueNames } from "../utils/leagues";
 import { prioText, prioClass } from "../utils/scoring";
-import { getTeam, resolveTeam } from "../utils/teams";
+import { ALL_TEAMS, getTeam, resolveTeam } from "../utils/teams";
 
 const SKIP = new Set(["de", "du", "d", "el", "al", "le", "la", "les", "the", "of", "et", "des"]);
 
 function norm(s) {
   return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[''']/g, "");
+}
+
+function findTeamByName(name) {
+  const n = norm(name.trim());
+  return ALL_TEAMS.find(t => norm(t.name) === n) || null;
+}
+
+function resolveTeamsFromString(teamsStr) {
+  if (!teamsStr) return [null, null];
+  const parts = teamsStr.split(/\s+vs\s+/i);
+  if (parts.length !== 2) return [null, null];
+  return [findTeamByName(parts[0]), findTeamByName(parts[1])];
 }
 
 function shortName(name) {
@@ -51,8 +63,12 @@ export default function MatchCard({ match, plan }) {
   const teamName = team ? team.name : isImportant ? "Grand match" : "Autre";
 
   // Team 1 & 2 logos (supports custom teams with "__" prefix)
-  const team1 = match.team1Id ? resolveTeam(match.team1Id) : null;
-  const team2 = match.team2Id ? resolveTeam(match.team2Id) : null;
+  let team1 = match.team1Id ? resolveTeam(match.team1Id) : null;
+  let team2 = match.team2Id ? resolveTeam(match.team2Id) : null;
+  // Fallback pour les anciens matchs sans team1Id/team2Id
+  if (!team1 && !team2 && match.teams) {
+    [team1, team2] = resolveTeamsFromString(match.teams);
+  }
 
   // Pas de drapeaux UNIQUEMENT quand l'équipe concernée est un CLUB (ni national ni "important")
   // → type = club favori (est, inter…) : pas de drapeaux
