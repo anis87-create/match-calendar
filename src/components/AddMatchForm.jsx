@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addMatch, updateMatch } from "../features/matches/matchesSlice";
 import { clearEditing } from "../features/ui/uiSlice";
-import { getTeam, TEAMS_BY_GROUP } from "../utils/teams";
+import { resolveTeam, TEAMS_BY_GROUP } from "../utils/teams";
 import { leagueNames } from "../utils/leagues";
 import TeamLogo from "./TeamLogo";
 
@@ -13,7 +13,7 @@ function TeamSelect({ value, onChange, placeholder }) {
   const [query, setQuery] = useState("");
   const ref = useRef(null);
 
-  const selected = value ? getTeam(value) : null;
+  const selected = resolveTeam(value);
 
   const filtered = TEAMS_BY_GROUP.map((g) => ({
     ...g,
@@ -23,6 +23,8 @@ function TeamSelect({ value, onChange, placeholder }) {
     ),
   })).filter((g) => g.teams.length > 0);
 
+  const hasResults = filtered.some((g) => g.teams.length > 0);
+
   useEffect(() => {
     function handleOutside(e) {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false);
@@ -30,6 +32,18 @@ function TeamSelect({ value, onChange, placeholder }) {
     document.addEventListener("mousedown", handleOutside);
     return () => document.removeEventListener("mousedown", handleOutside);
   }, []);
+
+  function selectCustom() {
+    if (!query.trim()) return;
+    onChange("__" + query.trim());
+    setOpen(false);
+    setQuery("");
+  }
+
+  function handleKeyDown(e) {
+    if (e.key === "Enter") selectCustom();
+    if (e.key === "Escape") setOpen(false);
+  }
 
   return (
     <div className="team-select" ref={ref}>
@@ -54,11 +68,21 @@ function TeamSelect({ value, onChange, placeholder }) {
             className="team-select-search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Rechercher..."
+            onKeyDown={handleKeyDown}
+            placeholder="Rechercher ou saisir un nom..."
             autoFocus
             onClick={(e) => e.stopPropagation()}
           />
+
           <div className="team-select-list">
+            {/* Option saisie libre */}
+            {query.trim() && (
+              <div className="team-option team-option-custom" onClick={selectCustom}>
+                <span className="team-custom-icon">✏️</span>
+                <span>Utiliser <strong>"{query.trim()}"</strong></span>
+              </div>
+            )}
+
             {filtered.map((g) => (
               <div key={g.group}>
                 <div className="team-group-header">{g.group}</div>
@@ -79,6 +103,10 @@ function TeamSelect({ value, onChange, placeholder }) {
                 ))}
               </div>
             ))}
+
+            {!hasResults && !query.trim() && (
+              <div className="team-select-empty">Aucune équipe trouvée</div>
+            )}
           </div>
         </div>
       )}
@@ -127,9 +155,6 @@ export default function AddMatchForm() {
   }
 
   function handleSubmit() {
-    const t1 = form.team1Id ? getTeam(form.team1Id) : null;
-    const t2 = form.team2Id ? getTeam(form.team2Id) : null;
-
     if (!form.team1Id || !form.team2Id) {
       alert("Veuillez choisir l'Équipe 1 et l'Équipe 2");
       return;
@@ -139,8 +164,10 @@ export default function AddMatchForm() {
       return;
     }
 
+    const t1 = resolveTeam(form.team1Id);
+    const t2 = resolveTeam(form.team2Id);
     const teamsStr = `${t1.name} vs ${t2.name}`;
-    const payload = { ...form, teams: teamsStr, team1Id: form.team1Id, team2Id: form.team2Id };
+    const payload = { ...form, teams: teamsStr };
 
     if (editingId !== null) {
       dispatch(updateMatch({ id: editingId, ...payload }));
@@ -157,8 +184,8 @@ export default function AddMatchForm() {
   }
 
   const isEditing = editingId !== null;
-  const t1 = form.team1Id ? getTeam(form.team1Id) : null;
-  const t2 = form.team2Id ? getTeam(form.team2Id) : null;
+  const t1 = resolveTeam(form.team1Id);
+  const t2 = resolveTeam(form.team2Id);
 
   return (
     <div className="add-form">
@@ -169,8 +196,8 @@ export default function AddMatchForm() {
         )}
       </div>
 
-      {/* Team selectors */}
-      <div className="form-grid teams-row">
+      {/* Sélecteurs équipes */}
+      <div className="form-teams-row">
         <div className="form-group">
           <label>Équipe 1</label>
           <TeamSelect
@@ -179,17 +206,19 @@ export default function AddMatchForm() {
             placeholder="Choisir l'équipe 1"
           />
         </div>
+
         <div className="form-vs-separator">
           {t1 && t2 ? (
             <div className="form-vs-preview">
-              <TeamLogo team={t1} size={28} />
+              <TeamLogo team={t1} size={26} />
               <span>vs</span>
-              <TeamLogo team={t2} size={28} />
+              <TeamLogo team={t2} size={26} />
             </div>
           ) : (
             <span className="form-vs-label">vs</span>
           )}
         </div>
+
         <div className="form-group">
           <label>Équipe 2</label>
           <TeamSelect
@@ -218,7 +247,7 @@ export default function AddMatchForm() {
           <label>Équipe concernée</label>
           <select name="type" value={form.type} onChange={handleChange}>
             {favoriteTeams.map((id) => {
-              const team = getTeam(id);
+              const team = resolveTeam(id);
               return <option key={id} value={id}>{team ? team.name : id}</option>;
             })}
             <option value="important">⭐ Grand match</option>

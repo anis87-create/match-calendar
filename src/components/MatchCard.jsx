@@ -5,7 +5,7 @@ import { deleteMatch } from "../features/matches/matchesSlice";
 import { setEditingId } from "../features/ui/uiSlice";
 import { leagueNames } from "../utils/leagues";
 import { prioText, prioClass } from "../utils/scoring";
-import { getTeam } from "../utils/teams";
+import { getTeam, resolveTeam } from "../utils/teams";
 import { months } from "../utils/leagues";
 import TeamLogo from "./TeamLogo";
 
@@ -33,9 +33,9 @@ export default function MatchCard({ match, plan }) {
   const teamColor = team ? team.color : isImportant ? "#e24b4a" : "#999";
   const teamName = team ? team.name : isImportant ? "Grand match" : "Autre";
 
-  // Team 1 & 2 logos
-  const team1 = match.team1Id ? getTeam(match.team1Id) : null;
-  const team2 = match.team2Id ? getTeam(match.team2Id) : null;
+  // Team 1 & 2 logos (supports custom teams with "__" prefix)
+  const team1 = match.team1Id ? resolveTeam(match.team1Id) : null;
+  const team2 = match.team2Id ? resolveTeam(match.team2Id) : null;
 
   const pillStyle = { background: teamColor + "18", color: teamColor, border: `1px solid ${teamColor}33` };
   const cardBorderStyle = isEditing ? {} : { borderLeft: `3px solid ${teamColor}` };

@@ -1,0 +1,80 @@
+{
+  "Tunisian Teams": {
+    "Espérance Sportive de Tunis (EST)": {
+      "badge_url": "NOT FOUND",
+      "notes": "Limited coverage in TheSportsDB for this club"
+    },
+    "Club Africain (CA)": {
+      "badge_url": "https://r2.thesportsdb.com/images/media/team/badge/2gijg71753933998.png",
+      "country": "Tunisia"
+    },
+    "Étoile Sportive du Sahel (ESS)": {
+      "badge_url": "NOT FOUND",
+      "notes": "Not found in TheSportsDB"
+    },
+    "Club Sportif Sfaxien (CSS)": {
+      "badge_url": "NOT FOUND",
+      "notes": "Not found in TheSportsDB"
+    },
+    "Club Athlétique Bizertin (CAB)": {
+      "badge_url": "NOT FOUND",
+      "notes": "Not found in TheSportsDB"
+    }
+  },
+  "Algerian Teams": {
+    "USM Alger": {
+      "badge_url": "https://r2.thesportsdb.com/images/media/team/badge/76n1qa1695448417.png",
+      "country": "Algeria"
+    },
+    "MC Alger (MCA)": {
+      "badge_url": "https://r2.thesportsdb.com/images/media/team/badge/rp2tib1636647116.png",
+      "country": "Algeria"
+    },
+    "CR Belouizdad (CRB)": {
+      "badge_url": "NOT FOUND",
+      "notes": "Not found in TheSportsDB"
+    },
+    "JS Kabylie (JSK)": {
+      "badge_url": "https://r2.thesportsdb.com/images/media/team/badge/h3w0w71581543584.png",
+      "country": "Algeria"
+    }
+  },
+  "Moroccan Teams": {
+    "Wydad AC": {
+      "badge_url": "NOT FOUND",
+      "notes": "Not found in TheSportsDB"
+    },
+    "Raja CA": {
+      "badge_url": "NOT FOUND",
+      "notes": "Not found in TheSportsDB"
+    },
+    "RS Berkane": {
+      "badge_url": "NOT FOUND",
+      "notes": "Not found in TheSportsDB"
+    }
+  },
+  "Egyptian Teams": {
+    "Al Ahly SC": {
+      "badge_url": "NOT FOUND",
+      "notes": "Not found in TheSportsDB"
+    },
+    "Zamalek SC": {
+      "badge_url": "NOT FOUND",
+      "notes": "Not found in TheSportsDB"
+    },
+    "Pyramids FC": {
+      "badge_url": "NOT FOUND",
+      "notes": "Not found in TheSportsDB"
+    }
+  },
+  "Flag Icons CDN": {
+    "status": "WORKING",
+    "format": "https://flagicons.lipis.dev/flags/1x1/{country_code}.svg",
+    "examples": {
+      "Tunisia": "https://flagicons.lipis.dev/flags/1x1/tn.svg",
+      "Algeria": "https://flagicons.lipis.dev/flags/1x1/dz.svg",
+      "Morocco": "https://flagicons.lipis.dev/flags/1x1/ma.svg",
+      "Egypt": "https://flagicons.lipis.dev/flags/1x1/eg.svg"
+    }
+  }
+}
