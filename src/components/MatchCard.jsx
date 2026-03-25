@@ -61,11 +61,11 @@ export default function MatchCard({ match, plan }) {
       <div className="match-info">
         {team1 && team2 ? (
           <div className="match-teams-logos">
-            <TeamLogo team={team1} size={18} />
+            {team1.id?.startsWith("nat_") && <TeamLogo team={team1} size={18} />}
             <span className="match-team-name">{team1.name}</span>
             <span className="match-vs">vs</span>
             <span className="match-team-name">{team2.name}</span>
-            <TeamLogo team={team2} size={18} />
+            {team2.id?.startsWith("nat_") && <TeamLogo team={team2} size={18} />}
           </div>
         ) : (
           <div className="match-teams">{match.teams}</div>
