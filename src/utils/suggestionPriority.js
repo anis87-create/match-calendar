@@ -10,7 +10,29 @@ const TUNISIAN_CLUBS = new Set([
   "est", "ca", "ess", "css", "cab", "usm_tun", "st_tun",
 ]);
 
-const TUNISIAN_NATIONAL = new Set(["nat_tun"]);
+// IDs des sélections nationales tunisiennes (app IDs)
+const TUNISIAN_NATIONAL = new Set(["nat_tunisie"]);
+
+// Grandes nations africaines (noms tels que renvoyés par l'API en anglais)
+const BIG_AFRICAN_NATIONS = new Set([
+  "Tunisia", "Algeria", "Morocco", "Egypt", "Senegal", "Nigeria",
+  "Cameroon", "Ivory Coast", "Côte d'Ivoire", "Ghana", "Mali",
+  "South Africa", "Congo DR", "Congo", "Guinea", "Cape Verde",
+]);
+
+// Grandes nations européennes / mondiales (noms API anglais)
+const BIG_EUROPEAN_NATIONS = new Set([
+  "France", "Spain", "Germany", "England", "Portugal", "Italy",
+  "Netherlands", "Belgium", "Croatia", "Denmark", "Serbia",
+  "Ukraine", "Turkey", "Poland", "Scotland",
+]);
+
+const BIG_WORLD_NATIONS = new Set([
+  ...BIG_AFRICAN_NATIONS,
+  ...BIG_EUROPEAN_NATIONS,
+  "Brazil", "Argentina", "Uruguay", "Colombia", "Mexico",
+  "USA", "Japan", "South Korea", "Saudi Arabia", "Australia",
+]);
 
 // Pairs of team IDs that form classics/derbies (order-independent)
 const CLASSICS = [
@@ -37,8 +59,22 @@ export function isBigClub(teamId) {
   return BIG_CLUBS.has(teamId);
 }
 
-export function isTunisian(teamId) {
-  return TUNISIAN_CLUBS.has(teamId) || TUNISIAN_NATIONAL.has(teamId);
+// Vérifie si c'est une équipe tunisienne (club ou sélection)
+// Accepte l'app ID ou le nom de l'API
+export function isTunisian(teamId, teamName) {
+  if (TUNISIAN_CLUBS.has(teamId) || TUNISIAN_NATIONAL.has(teamId)) return true;
+  // Fallback sur le nom (API retourne "Tunisia" pour la sélection)
+  return teamName === "Tunisia";
+}
+
+// Vérifie si c'est une grande nation africaine (par nom API)
+function isBigAfrican(teamId, teamName) {
+  return isTunisian(teamId, teamName) || BIG_AFRICAN_NATIONS.has(teamName);
+}
+
+// Vérifie si c'est une grande nation mondiale (par nom API)
+function isBigWorld(teamId, teamName) {
+  return BIG_WORLD_NATIONS.has(teamName) || isTunisian(teamId, teamName);
 }
 
 export function isClassicMatch(t1, t2) {
@@ -48,20 +84,30 @@ export function isClassicMatch(t1, t2) {
 }
 
 export function computeSuggestionScore(match, profile = {}) {
-  const { team1Id, team2Id, league } = match;
+  const { team1Id, team2Id, team1Name = "", team2Name = "", league } = match;
   const favTeams = profile.favoriteTeams ?? [];
 
   // Tier 0 — Équipes favorites → priorité absolue
   if (favTeams.includes(team1Id) || favTeams.includes(team2Id)) return 120;
 
+  // Tunisie (sélection) → même priorité que les équipes favorites de club
+  const hasTunisianNat = isTunisian(team1Id, team1Name) || isTunisian(team2Id, team2Name);
+  if (hasTunisianNat && !TUNISIAN_CLUBS.has(team1Id) && !TUNISIAN_CLUBS.has(team2Id)) {
+    // C'est la sélection nationale tunisienne → quasi-favori
+    return 118;
+  }
+
   let score = 0;
   const t1Big = isBigClub(team1Id);
   const t2Big = isBigClub(team2Id);
-  const t1Tun = isTunisian(team1Id);
-  const t2Tun = isTunisian(team2Id);
-  const hasTunisian = t1Tun || t2Tun;
+  const hasTunisianClub = TUNISIAN_CLUBS.has(team1Id) || TUNISIAN_CLUBS.has(team2Id);
 
-  // Tier 1 — Compétitions tunisiennes
+  const t1BigAfr = isBigAfrican(team1Id, team1Name);
+  const t2BigAfr = isBigAfrican(team2Id, team2Name);
+  const t1BigWorld = isBigWorld(team1Id, team1Name);
+  const t2BigWorld = isBigWorld(team2Id, team2Name);
+
+  // Tier 1 — Compétitions tunisiennes (clubs)
   if (league === "ligue1" || league === "cuptun") {
     score = 92;
   }
@@ -70,24 +116,43 @@ export function computeSuggestionScore(match, profile = {}) {
     score = 90;
   }
   // Tier 3 — Qualif CDM Afrique / AFCON
+  // → differentiée selon l'importance des équipes
   else if (league === "wcq_afr" || league === "afcon") {
-    score = 88;
+    if (t1BigAfr && t2BigAfr) score = 92; // deux grandes nations africaines
+    else if (t1BigAfr || t2BigAfr) score = 85;
+    else score = 72;
   }
-  // Tier 3b — CAF avec équipe tunisienne
-  else if ((league === "caf" || league === "cafc") && hasTunisian) {
+  // Tier 3b — CAF CL/Conf avec club tunisien
+  else if ((league === "caf" || league === "cafc") && hasTunisianClub) {
     score = 88;
   }
   // Tier 4 — UCL
   else if (league === "ucl") {
     score = t1Big || t2Big ? 85 : 75;
   }
-  // Tier 5 — Euro / Copa America
-  else if (league === "euro" || league === "copa_am") {
-    score = 82;
+  // Tier 5 — Euro
+  else if (league === "euro") {
+    if (t1BigWorld && t2BigWorld) score = 85;
+    else if (t1BigWorld || t2BigWorld) score = 80;
+    else score = 72;
   }
-  // Tier 5b — Qualif CDM Europe/Asie/Amériques
-  else if (league === "wcq_eur" || league === "wcq_asi" || league === "wcq_sam") {
-    score = 78;
+  // Tier 5b — Copa America
+  else if (league === "copa_am") {
+    if (t1BigWorld && t2BigWorld) score = 83;
+    else if (t1BigWorld || t2BigWorld) score = 78;
+    else score = 70;
+  }
+  // Tier 5c — Qualif CDM Europe → grandes affiches seulement
+  else if (league === "wcq_eur") {
+    if (t1BigWorld && t2BigWorld) score = 82;
+    else if (t1BigWorld || t2BigWorld) score = 74;
+    else score = 58;
+  }
+  // Tier 5d — Qualif CDM Asie / Amériques
+  else if (league === "wcq_asi" || league === "wcq_sam") {
+    if (t1BigWorld && t2BigWorld) score = 78;
+    else if (t1BigWorld || t2BigWorld) score = 70;
+    else score = 52;
   }
   // Tier 6 — Serie A
   else if (league === "serie") {
@@ -101,7 +166,7 @@ export function computeSuggestionScore(match, profile = {}) {
     else if (t1Big || t2Big) score = 70;
     else score = 42;
   }
-  // Tier 8 — CAF sans Tunisien
+  // Tier 8 — CAF sans club tunisien
   else if (league === "caf" || league === "cafc") {
     score = 72;
   }
@@ -114,7 +179,7 @@ export function computeSuggestionScore(match, profile = {}) {
     if (t1Big || t2Big) score = 65;
     else score = 38;
   }
-  // Tier 11 — Coupes nationales
+  // Tier 11 — Coupes nationales de clubs
   else if (
     ["coppa", "facup", "coparey", "carabaocup", "dfbpokal", "coupefr"].includes(league)
   ) {
@@ -123,6 +188,15 @@ export function computeSuggestionScore(match, profile = {}) {
   // Tier 12 — UECL
   else if (league === "uecl") {
     score = 48;
+  }
+  // Tier 13 — Matchs amicaux : Tunisie prioritaire, puis grandes affiches
+  else if (league === "friendly") {
+    // Tunisie (sélection) en amical → traité plus haut (score 118)
+    // Grandes nations mondiales qui s'affrontent
+    if (t1BigWorld && t2BigWorld) score = 65;
+    else if (t1BigAfr && t2BigAfr) score = 60;
+    else if (t1BigWorld || t2BigWorld) score = 48;
+    else score = 20;
   }
   // Reste
   else {

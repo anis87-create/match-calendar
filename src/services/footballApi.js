@@ -105,6 +105,7 @@ const LEAGUE_ID_MAP = {
   32: "wcq_eur",
   17: "wcq_asi",
   31: "wcq_sam",
+  10: "friendly",   // International friendlies (sélections nationales)
 };
 
 // Leagues to fetch (id + name for display fallback)
@@ -122,6 +123,7 @@ const LEAGUES_TO_FETCH = [
   { id: 11, name: "CAF Confederation Cup" },
   { id: 29, name: "Qualif. CDM Afrique" },
   { id: 6, name: "AFCON" },
+  { id: 10, name: "Match amical" },
 ];
 
 function getCurrentSeason() {
