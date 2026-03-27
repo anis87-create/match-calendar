@@ -385,7 +385,8 @@ export default function AddMatchForm() {
           <select name="type" value={form.type} onChange={handleChange}>
             {favoriteTeams.map((id) => {
               const team = resolveTeam(id);
-              return <option key={id} value={id}>{team ? team.name : id}</option>;
+              if (!team) return null;
+              return <option key={id} value={id}>{team.name}</option>;
             })}
             <option value="important">⭐ Grand match</option>
           </select>

@@ -10,36 +10,13 @@ export default function Header() {
 
   const teams = profile.favoriteTeams.map((id) => getTeam(id)).filter(Boolean);
 
-  // North African clubs → acronym (CAB, EST, CSS…)
-  const ACRONYM_GROUPS = ["Tunisie", "Algérie", "Maroc", "Égypte"];
-  // National teams → first 3 letters of country name (TUN, ALG, MAR…)
-  const NATIONAL_GROUP = "Équipes nationales";
-  // Prefixes to skip for European teams
-  const SKIP_PREFIXES = ["FC", "AC", "AS", "SC", "RC", "SS", "US", "OGC", "AJ", "VfB", "VfL"];
+  const SKIP_WORDS = new Set(["de", "du", "des", "el", "al", "le", "la", "les", "the", "of", "fc", "ac", "as", "sc", "rc", "ss", "us", "ogc", "aj", "vfb", "vfl"]);
 
   function badgeLabel(team) {
-    if (team.group === NATIONAL_GROUP) {
-      // "Équipe de Tunisie" → last significant word → first 3 letters → TUN
-      const words = team.name.split(" ").filter((w) => w.length >= 3);
-      const last = words[words.length - 1] || team.name;
-      return last.slice(0, 3).toUpperCase();
-    }
-    if (ACRONYM_GROUPS.includes(team.group)) {
-      // First letter of each significant word (skip "de", "du", "el"…)
-      return team.name
-        .split(" ")
-        .filter((w) => w.length >= 2)
-        .map((w) => w[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 4);
-    }
-    // European clubs: first 3 letters, skip common prefixes
-    const words = team.name.split(" ");
-    const significant = SKIP_PREFIXES.includes(words[0]) && words.length > 1
-      ? words.slice(1).join(" ")
-      : team.name;
-    return significant.slice(0, 3).toUpperCase();
+    const words = team.name.split(/[\s\-]+/).filter((w) => !SKIP_WORDS.has(w.toLowerCase()));
+    const acronym = words.map((w) => w[0]).join("").toUpperCase().slice(0, 4);
+    // Single word (ex: "Tunisie") → first 3 letters
+    return acronym.length <= 1 ? words[0].slice(0, 3).toUpperCase() : acronym;
   }
 
   return (
