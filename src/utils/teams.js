@@ -133,6 +133,25 @@ const LIGUE1_TUN = [
   { id: "us_bengardane", name: "US Ben Guerdane",             color: "#CC0000", logo: f("tn") },
 ];
 
+const LIGUE2_TUN = [
+  { id: "asg",           name: "AS Gabès",                  color: "#006600", logo: f("tn") },
+  { id: "srs",           name: "Sfax Railways Sport",       color: "#003399", logo: f("tn") },
+  { id: "cs_chebba",    name: "CS Chebba",                  color: "#CC0000", logo: f("tn") },
+  { id: "as_rejiche",   name: "AS Rejiche",                 color: "#003399", logo: f("tn") },
+  { id: "as_djerba",    name: "AS Djerba",                  color: "#CC0000", logo: f("tn") },
+  { id: "esm",           name: "ÉS Métlaoui",               color: "#000000", logo: f("tn") },
+  { id: "om_medenine",  name: "Olympique de Médenine",      color: "#CC0000", logo: f("tn") },
+  { id: "js_jendouba",  name: "Jendouba Sports",            color: "#006600", logo: f("tn") },
+  { id: "as_kasserine", name: "AS Kasserine",               color: "#CC0000", logo: f("tn") },
+  { id: "egs_gafsa",    name: "EGS Gafsa",                  color: "#003399", logo: f("tn") },
+  { id: "sn_nabeul",    name: "Stade Nabeulien",            color: "#CC0000", logo: f("tn") },
+  { id: "es_zarzis",    name: "ES Zarzis",                  color: "#003399", logo: f("tn") },
+  { id: "grombalia",    name: "Grombalia Sports",           color: "#006600", logo: f("tn") },
+  { id: "sc_ben_arous", name: "SC Ben Arous",               color: "#CC0000", logo: f("tn") },
+  { id: "as_regueb",    name: "AS Régueb",                  color: "#CC0000", logo: f("tn") },
+  { id: "os_kef",       name: "OS Le Kef",                  color: "#003399", logo: f("tn") },
+];
+
 const ALGERIE = [
   { id: "usma",           name: "USM Alger",          color: "#CC0000", logo: f("dz") },
   { id: "mca",            name: "MC Alger",           color: "#009A44", logo: f("dz") },
@@ -320,7 +339,8 @@ export const TEAMS_BY_GROUP = [
   { group: "La Liga",                  leagueId: "liga",         teams: LA_LIGA        },
   { group: "Bundesliga",               leagueId: "bundesliga",   teams: BUNDESLIGA     },
   { group: "Ligue 1 (France)",         leagueId: "ligue1fr",    teams: LIGUE1_FR      },
-  { group: "Tunisie",                  leagueId: "ligue1",       teams: LIGUE1_TUN     },
+  { group: "Tunisie — Ligue 1",        leagueId: "ligue1",       teams: LIGUE1_TUN     },
+  { group: "Tunisie — Ligue 2",        leagueId: "ligue2",       teams: LIGUE2_TUN     },
   { group: "Algérie",                  leagueId: "algerie",      teams: ALGERIE        },
   { group: "Maroc",                    leagueId: "maroc",        teams: MAROC          },
   { group: "Égypte",                   leagueId: "egypte",       teams: EGYPTE         },
