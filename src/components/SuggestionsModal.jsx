@@ -39,14 +39,15 @@ export default function SuggestionsModal({ isOpen, onClose }) {
     [rawSuggestions, existingMatches]
   );
 
-  const loadSuggestions = useCallback(async () => {
+  const loadSuggestions = useCallback(async ({ forceRefresh = false } = {}) => {
     setLoading(true);
     setError(null);
     try {
-      const raw = await fetchAllFixtures(date);
+      const raw = await fetchAllFixtures(date, { forceRefresh });
       setRawSuggestions(scoredAndSorted(raw, profile));
-    } catch {
-      setError("Impossible de charger les matchs. Vérifie ta connexion.");
+    } catch (err) {
+      console.error("[SuggestionsModal] Erreur fetch:", err);
+      setError(err.message || "Impossible de charger les matchs.");
     } finally {
       setLoading(false);
     }
@@ -113,8 +114,9 @@ export default function SuggestionsModal({ isOpen, onClose }) {
           />
           <button
             className="sug-refresh-btn"
-            onClick={loadSuggestions}
+            onClick={() => loadSuggestions({ forceRefresh: true })}
             disabled={loading}
+            title="Forcer le rechargement depuis l'API"
           >
             {loading ? "..." : "↻ Actualiser"}
           </button>
@@ -131,7 +133,7 @@ export default function SuggestionsModal({ isOpen, onClose }) {
           {!loading && error && (
             <div className="sug-error">
               <span>{error}</span>
-              <button className="sug-retry-btn" onClick={loadSuggestions}>
+              <button className="sug-retry-btn" onClick={() => loadSuggestions({ forceRefresh: true })}>
                 Réessayer
               </button>
             </div>

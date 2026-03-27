@@ -145,14 +145,37 @@ function resolveTeamId(apiTeamId, teamName, countryCode) {
 
 async function fetchFixturesForLeague(date, leagueId, season) {
   const url = `${BASE_URL}/fixtures?date=${date}&league=${leagueId}&season=${season}`;
-  const res = await fetch(url, {
-    headers: {
-      "x-apisports-key": API_KEY,
-    },
-  });
+  let res;
+  try {
+    res = await fetch(url, {
+      headers: {
+        "x-apisports-key": API_KEY,
+      },
+    });
+  } catch (networkErr) {
+    throw new Error(`CORS ou réseau (league ${leagueId}): ${networkErr.message}`);
+  }
+  if (res.status === 429) throw new Error("Quota API épuisé (429) — réessaie demain");
+  if (res.status === 401) throw new Error("Clé API invalide (401)");
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const json = await res.json();
+  // api-sports.io retourne parfois errors[] même avec status 200
+  if (json.errors && Object.keys(json.errors).length > 0) {
+    throw new Error(`API error: ${JSON.stringify(json.errors)}`);
+  }
   return json.response ?? [];
+}
+
+export async function checkApiStatus() {
+  try {
+    const res = await fetch(`${BASE_URL}/status`, {
+      headers: { "x-apisports-key": API_KEY },
+    });
+    const json = await res.json();
+    return json.response ?? null;
+  } catch {
+    return null;
+  }
 }
 
 function normalizeFixture(fixture, leagueFallbackName) {
@@ -190,8 +213,43 @@ function normalizeFixture(fixture, leagueFallbackName) {
   };
 }
 
-export async function fetchAllFixtures(date) {
+const CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6h
+
+function getCacheKey(date) {
+  return `mc_fixtures_${date}`;
+}
+
+function loadFromCache(date) {
+  try {
+    const raw = localStorage.getItem(getCacheKey(date));
+    if (!raw) return null;
+    const { ts, fixtures } = JSON.parse(raw);
+    if (Date.now() - ts > CACHE_TTL_MS) return null;
+    return fixtures;
+  } catch {
+    return null;
+  }
+}
+
+function saveToCache(date, fixtures) {
+  try {
+    localStorage.setItem(getCacheKey(date), JSON.stringify({ ts: Date.now(), fixtures }));
+  } catch {
+    // ignore storage errors
+  }
+}
+
+export async function fetchAllFixtures(date, { forceRefresh = false } = {}) {
+  if (!forceRefresh) {
+    const cached = loadFromCache(date);
+    if (cached) {
+      console.log(`[footballApi] Cache hit pour ${date} (${cached.length} matchs)`);
+      return cached;
+    }
+  }
+
   const season = getCurrentSeason();
+  console.log(`[footballApi] Fetch API pour ${date}, saison ${season}…`);
 
   const results = await Promise.allSettled(
     LEAGUES_TO_FETCH.map((l) => fetchFixturesForLeague(date, l.id, season))
@@ -199,6 +257,7 @@ export async function fetchAllFixtures(date) {
 
   const fixtures = [];
   const seen = new Set();
+  const errors = [];
 
   results.forEach((result, idx) => {
     if (result.status === "fulfilled") {
@@ -214,8 +273,21 @@ export async function fetchAllFixtures(date) {
           }
         }
       });
+    } else {
+      errors.push(`League ${LEAGUES_TO_FETCH[idx].id}: ${result.reason?.message}`);
     }
   });
 
+  if (errors.length > 0) {
+    console.warn(`[footballApi] Erreurs sur ${errors.length} ligue(s):`, errors);
+  }
+
+  // Si toutes les ligues ont échoué, on remonte la première erreur
+  if (fixtures.length === 0 && errors.length === LEAGUES_TO_FETCH.length) {
+    throw new Error(errors[0]);
+  }
+
+  saveToCache(date, fixtures);
+  console.log(`[footballApi] ${fixtures.length} matchs récupérés pour ${date}`);
   return fixtures;
 }
