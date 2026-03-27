@@ -348,7 +348,6 @@ export const TEAMS_BY_GROUP = [
   { group: "Nationales — Afrique",     leagueId: "nat_afrique",  teams: NAT_CAF        },
   { group: "Nationales — Asie",        leagueId: "nat_asie",     teams: NAT_AFC        },
   { group: "Nationales — Amériques",   leagueId: "nat_amerique", teams: [...NAT_CONMEBOL, ...NAT_CONCACAF] },
-  { group: "Autre",                    leagueId: "autre",        teams: [{ id: "autre", name: "Autre", color: "#888888", logo: null }] },
 ];
 
 export const ALL_TEAMS = TEAMS_BY_GROUP.flatMap((g) =>
