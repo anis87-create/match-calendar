@@ -45,6 +45,11 @@ const matchesSlice = createSlice({
       if (m) m.watched = !m.watched;
       persist(state);
     },
+    deleteMatchesBeforeMonth(state, action) {
+      // action.payload = "YYYY-MM" (mois courant)
+      state.items = state.items.filter((m) => m.date.slice(0, 7) >= action.payload);
+      persist(state);
+    },
     reorderMatches(state, action) {
       const { activeId, overId } = action.payload;
       const si = state.items.findIndex((m) => m.id === activeId);
@@ -63,5 +68,5 @@ function persist(state) {
   } catch (_) {}
 }
 
-export const { addMatch, updateMatch, deleteMatch, toggleWatched, reorderMatches } = matchesSlice.actions;
+export const { addMatch, updateMatch, deleteMatch, toggleWatched, reorderMatches, deleteMatchesBeforeMonth } = matchesSlice.actions;
 export default matchesSlice.reducer;
