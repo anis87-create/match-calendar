@@ -21,6 +21,10 @@ function isArabTeam(team) {
   return m ? ARAB_CC.has(m[1]) : false;
 }
 
+function isNationalTeam(team) {
+  return team?.id?.startsWith("nat_");
+}
+
 function findTeamByName(name) {
   const n = norm(name.trim());
   return ALL_TEAMS.find(t => norm(t.name) === n) || null;
@@ -117,9 +121,9 @@ export default function MatchCard({ match, plan }) {
         {team1 && team2 ? (
           <div className="match-teams-logos">
             {showFlags && <TeamLogo team={team1} size={18} />}
-            <span className="match-team-name">{shortName(team1.name, isArabTeam(team1))}</span>
+            <span className="match-team-name">{shortName(team1.name, isArabTeam(team1) && !isNationalTeam(team1))}</span>
             <span className="match-vs">vs</span>
-            <span className="match-team-name">{shortName(team2.name, isArabTeam(team2))}</span>
+            <span className="match-team-name">{shortName(team2.name, isArabTeam(team2) && !isNationalTeam(team2))}</span>
             {showFlags && <TeamLogo team={team2} size={18} />}
           </div>
         ) : (
