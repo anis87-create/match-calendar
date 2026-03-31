@@ -35,15 +35,15 @@ function resolveTeamsFromString(teamsStr) {
 
 function shortName(name, arab = false) {
   if (!name) return "";
-  if (arab) return name.slice(0, 3);
-  if (name.length <= 13) return name;
-  const parts = name.split(/[\s\-\/]+/);
-  if (parts.length <= 1) return name;
-  const abbr = parts
-    .filter(w => !SKIP.has(norm(w)))
-    .map(w => w[0].toUpperCase())
-    .join("");
-  return abbr || name.slice(0, 5);
+  if (arab) {
+    const parts = name.split(/[\s\-\/]+/);
+    const abbr = parts
+      .filter(w => !SKIP.has(norm(w)))
+      .map(w => w[0].toUpperCase())
+      .join("");
+    return abbr || name.slice(0, 3);
+  }
+  return name;
 }
 import { months } from "../utils/leagues";
 import TeamLogo from "./TeamLogo";
