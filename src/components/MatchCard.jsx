@@ -9,9 +9,16 @@ import { ALL_TEAMS, getTeam, resolveTeam } from "../utils/teams";
 import ChannelBadge from "./ChannelBadge";
 
 const SKIP = new Set(["de", "du", "d", "el", "al", "le", "la", "les", "the", "of", "et", "des"]);
+const ARAB_CC = new Set(["tn","dz","ma","eg","sa","ae","iq","jo","bh","kw","om","sy","lb","ps","qa","ly","sd","mr","km"]);
 
 function norm(s) {
   return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[''']/g, "");
+}
+
+function isArabTeam(team) {
+  if (!team?.logo) return false;
+  const m = team.logo.match(/\/1x1\/([^.]+)\.svg$/);
+  return m ? ARAB_CC.has(m[1]) : false;
 }
 
 function findTeamByName(name) {
@@ -26,8 +33,10 @@ function resolveTeamsFromString(teamsStr) {
   return [findTeamByName(parts[0]), findTeamByName(parts[1])];
 }
 
-function shortName(name) {
-  if (!name || name.length <= 13) return name || "";
+function shortName(name, arab = false) {
+  if (!name) return "";
+  if (arab) return name.slice(0, 3);
+  if (name.length <= 13) return name;
   const parts = name.split(/[\s\-\/]+/);
   if (parts.length <= 1) return name;
   const abbr = parts
@@ -108,9 +117,9 @@ export default function MatchCard({ match, plan }) {
         {team1 && team2 ? (
           <div className="match-teams-logos">
             {showFlags && <TeamLogo team={team1} size={18} />}
-            <span className="match-team-name">{shortName(team1.name)}</span>
+            <span className="match-team-name">{shortName(team1.name, isArabTeam(team1))}</span>
             <span className="match-vs">vs</span>
-            <span className="match-team-name">{shortName(team2.name)}</span>
+            <span className="match-team-name">{shortName(team2.name, isArabTeam(team2))}</span>
             {showFlags && <TeamLogo team={team2} size={18} />}
           </div>
         ) : (

@@ -16,6 +16,11 @@ export default function MatchList() {
 
   const plan = buildPlan(items, profile);
   const today = new Date().toISOString().split("T")[0];
+  const todayObj = new Date(today + "T12:00:00");
+  const yd = new Date(todayObj); yd.setDate(todayObj.getDate() - 1);
+  const tm = new Date(todayObj); tm.setDate(todayObj.getDate() + 1);
+  const yesterday = yd.toISOString().split("T")[0];
+  const tomorrow = tm.toISOString().split("T")[0];
 
   const predefined = ["all", "important", "upcoming", "watched", "watch"];
   const filtered = items.filter((m) => {
@@ -58,7 +63,14 @@ export default function MatchList() {
               const [, mo, day] = date.split("-");
               const month = months[parseInt(mo) - 1];
               const dateObj = new Date(date + "T12:00:00");
-              const dayName = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"][dateObj.getDay()];
+              let dayLabel;
+              if (date === today) dayLabel = "Aujourd'hui";
+              else if (date === yesterday) dayLabel = "Hier";
+              else if (date === tomorrow) dayLabel = "Demain";
+              else {
+                const dayName = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"][dateObj.getDay()];
+                dayLabel = `${dayName} ${day} ${month}`;
+              }
               const limit = getDayLimit(date);
               const totalDay = items.filter((m) => m.date === date).length;
               const watchDay = items.filter((m) => m.date === date && plan.get(m.id)?.watch).length;
@@ -69,7 +81,7 @@ export default function MatchList() {
               return (
                 <div key={date} className="day-group">
                   <div className="day-group-title">
-                    {dayName} {day} {month}
+                    {dayLabel}
                     <span className={`day-limit-badge ${limitClass}`}>
                       {watchDay} / {limit} match{limit > 1 ? "s" : ""} recommandé{limit > 1 ? "s" : ""}
                     </span>
