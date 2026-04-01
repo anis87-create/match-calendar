@@ -188,6 +188,27 @@ const MAROC = [
   { id: "difaa_jadida",      name: "Difaâ El Jadida",    color: "#003399", logo: f("ma") },
 ];
 
+const SAUDI_PRO = [
+  { id: "al_hilal",    name: "Al-Hilal",      color: "#0055A5", logo: f("sa") },
+  { id: "al_nassr",    name: "Al-Nassr",      color: "#FFCC00", logo: f("sa") },
+  { id: "al_ittihad", name: "Al-Ittihad",    color: "#FFD700", logo: f("sa") },
+  { id: "al_ahli_sa", name: "Al-Ahli",       color: "#006633", logo: f("sa") },
+  { id: "al_shabab",  name: "Al-Shabab",     color: "#CC0000", logo: f("sa") },
+  { id: "al_ettifaq", name: "Al-Ettifaq",    color: "#FFCC00", logo: f("sa") },
+  { id: "al_qadisiya",name: "Al-Qadisiyah",  color: "#003399", logo: f("sa") },
+  { id: "al_fateh",   name: "Al-Fateh",      color: "#FF6600", logo: f("sa") },
+  { id: "al_wehda_sa",name: "Al-Wehda",      color: "#003399", logo: f("sa") },
+  { id: "al_taawoun", name: "Al-Taawoun",    color: "#FFCC00", logo: f("sa") },
+  { id: "al_raed",    name: "Al-Raed",       color: "#006600", logo: f("sa") },
+  { id: "al_fayha",   name: "Al-Fayha",      color: "#CC0000", logo: f("sa") },
+  { id: "al_khaleej", name: "Al-Khaleej",    color: "#009A44", logo: f("sa") },
+  { id: "al_riyadh",  name: "Al-Riyadh",     color: "#CC0000", logo: f("sa") },
+  { id: "damac_fc",   name: "Damac FC",      color: "#FFD700", logo: f("sa") },
+  { id: "al_hazem",   name: "Al-Hazem",      color: "#006600", logo: f("sa") },
+  { id: "al_okhdood", name: "Al-Okhdood",    color: "#003399", logo: f("sa") },
+  { id: "al_qadsiah", name: "Al-Qadsiah",    color: "#CC0000", logo: f("sa") },
+];
+
 const EGYPTE = [
   { id: "al_ahly",          name: "Al Ahly SC",            color: "#CC0000", logo: f("eg") },
   { id: "zamalek",          name: "Zamalek SC",            color: "#1A5276", logo: f("eg") },
@@ -344,6 +365,7 @@ export const TEAMS_BY_GROUP = [
   { group: "Algérie",                  leagueId: "algerie",      teams: ALGERIE        },
   { group: "Maroc",                    leagueId: "maroc",        teams: MAROC          },
   { group: "Égypte",                   leagueId: "egypte",       teams: EGYPTE         },
+  { group: "Arabie Saoudite — SPL",    leagueId: "spl",          teams: SAUDI_PRO      },
   { group: "Nationales — Europe",      leagueId: "nat_europe",   teams: NAT_UEFA       },
   { group: "Nationales — Afrique",     leagueId: "nat_afrique",  teams: NAT_CAF        },
   { group: "Nationales — Asie",        leagueId: "nat_asie",     teams: NAT_AFC        },
