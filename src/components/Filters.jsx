@@ -5,6 +5,7 @@ import { getTeam } from "../utils/teams";
 const FIXED_FILTERS = [
   { key: "all", label: "Tous" },
   { key: "important", label: "⭐ Grands matchs" },
+  { key: "autre", label: "📋 Autres" },
   { key: "upcoming", label: "À venir" },
   { key: "watched", label: "Regardés" },
   { key: "watch", label: "À regarder" },
