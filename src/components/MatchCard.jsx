@@ -9,7 +9,7 @@ import { ALL_TEAMS, getTeam, resolveTeam } from "../utils/teams";
 import ChannelBadge from "./ChannelBadge";
 
 const SKIP = new Set(["de", "du", "d", "el", "al", "le", "la", "les", "the", "of", "et", "des"]);
-const ARAB_CC = new Set(["tn","dz","ma","eg","sa","ae","iq","jo","bh","kw","om","sy","lb","ps","qa","ly","sd","mr","km"]);
+const ARAB_CC = new Set(["tn","dz","ma","eg","ae","iq","jo","bh","kw","om","sy","lb","ps","qa","ly","sd","mr","km"]);
 
 function norm(s) {
   return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[''']/g, "");
