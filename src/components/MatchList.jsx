@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
@@ -16,6 +17,19 @@ export default function MatchList() {
 
   const plan = buildPlan(items, profile);
   const today = new Date().toISOString().split("T")[0];
+
+  // Scroll auto vers aujourd'hui au chargement
+  useEffect(() => {
+    // Cherche d'abord aujourd'hui, sinon le premier jour à venir
+    const el =
+      document.querySelector(`[data-date="${today}"]`) ||
+      document.querySelector("[data-date]");
+    if (el) {
+      setTimeout(() => {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
+  }, []);
   const todayObj = new Date(today + "T12:00:00");
   const yd = new Date(todayObj); yd.setDate(todayObj.getDate() - 1);
   const tm = new Date(todayObj); tm.setDate(todayObj.getDate() + 1);
@@ -79,7 +93,7 @@ export default function MatchList() {
               if (totalDay > limit) limitClass = "limit-warn";
 
               return (
-                <div key={date} className="day-group">
+                <div key={date} className="day-group" data-date={date}>
                   <div className="day-group-title">
                     {dayLabel}
                     <span className={`day-limit-badge ${limitClass}`}>
