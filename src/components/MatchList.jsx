@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
@@ -14,22 +14,11 @@ export default function MatchList() {
   const profile = useSelector((s) => s.profile);
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
+  const [showAll, setShowAll] = useState(false);
 
   const plan = buildPlan(items, profile);
   const today = new Date().toISOString().split("T")[0];
 
-  // Scroll auto vers aujourd'hui au chargement
-  useEffect(() => {
-    // Cherche d'abord aujourd'hui, sinon le premier jour à venir
-    const el =
-      document.querySelector(`[data-date="${today}"]`) ||
-      document.querySelector("[data-date]");
-    if (el) {
-      setTimeout(() => {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 100);
-    }
-  }, []);
   const todayObj = new Date(today + "T12:00:00");
   const yd = new Date(todayObj); yd.setDate(todayObj.getDate() - 1);
   const tm = new Date(todayObj); tm.setDate(todayObj.getDate() + 1);
@@ -58,6 +47,14 @@ export default function MatchList() {
   });
   const sortedDays = Object.keys(grouped).sort();
 
+  // 3 prochains jours avec matchs (>= aujourd'hui)
+  const upcomingDays = sortedDays.filter((d) => d >= today);
+  const pastDays = sortedDays.filter((d) => d < today);
+  const visibleDays = showAll
+    ? sortedDays
+    : [...pastDays, ...upcomingDays.slice(0, 3)];
+  const hiddenCount = upcomingDays.length - 3;
+
   function handleDragEnd(event) {
     const { active, over } = event;
     if (over && active.id !== over.id) {
@@ -73,7 +70,7 @@ export default function MatchList() {
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={filtered.map((m) => m.id)} strategy={verticalListSortingStrategy}>
           <div className="match-list">
-            {sortedDays.map((date) => {
+            {visibleDays.map((date) => {
               const [, mo, day] = date.split("-");
               const month = months[parseInt(mo) - 1];
               const dateObj = new Date(date + "T12:00:00");
@@ -109,6 +106,16 @@ export default function MatchList() {
           </div>
         </SortableContext>
       </DndContext>
+      {!showAll && hiddenCount > 0 && (
+        <button className="show-all-btn" onClick={() => setShowAll(true)}>
+          Voir {hiddenCount} jour{hiddenCount > 1 ? "s" : ""} de plus
+        </button>
+      )}
+      {showAll && hiddenCount > 0 && (
+        <button className="show-all-btn" onClick={() => setShowAll(false)}>
+          Réduire
+        </button>
+      )}
     </>
   );
 }
