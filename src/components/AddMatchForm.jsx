@@ -389,7 +389,6 @@ export default function AddMatchForm() {
               return <option key={id} value={id}>{team.name}</option>;
             })}
             <option value="important">⭐ Grand match</option>
-            <option value="autre">📋 Autre</option>
           </select>
         </div>
       </div>

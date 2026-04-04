@@ -25,12 +25,9 @@ export default function MatchList() {
   const yesterday = yd.toISOString().split("T")[0];
   const tomorrow = tm.toISOString().split("T")[0];
 
-  const predefined = ["all", "important", "upcoming", "watched", "watch"];
+  const predefined = ["all", "important"];
   const filtered = items.filter((m) => {
     if (currentFilter === "important") return m.type === "important";
-    if (currentFilter === "upcoming") return m.date >= today && !m.watched;
-    if (currentFilter === "watched") return m.watched;
-    if (currentFilter === "watch") return plan.get(m.id)?.watch && !m.watched && m.date >= today;
     if (!predefined.includes(currentFilter)) return m.type === currentFilter; // team filter
     return true;
   });
@@ -47,13 +44,9 @@ export default function MatchList() {
   });
   const sortedDays = Object.keys(grouped).sort();
 
-  // 3 prochains jours avec matchs (>= aujourd'hui)
-  const upcomingDays = sortedDays.filter((d) => d >= today);
-  const pastDays = sortedDays.filter((d) => d < today);
-  const visibleDays = showAll
-    ? sortedDays
-    : [...pastDays, ...upcomingDays.slice(0, 3)];
-  const hiddenCount = upcomingDays.length - 3;
+  // 3 prochains jours avec matchs
+  const visibleDays = showAll ? sortedDays : sortedDays.slice(0, 3);
+  const hiddenCount = sortedDays.length - 3;
 
   function handleDragEnd(event) {
     const { active, over } = event;

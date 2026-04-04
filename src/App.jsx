@@ -7,18 +7,18 @@ import AddMatchForm from "./components/AddMatchForm";
 import Filters from "./components/Filters";
 import MatchList from "./components/MatchList";
 import SetupWizard from "./components/SetupWizard";
-import { deleteMatchesBeforeMonth } from "./features/matches/matchesSlice";
+import { deleteMatchesBeforeDate } from "./features/matches/matchesSlice";
 
 export default function App() {
   const setupDone = useSelector((s) => s.profile.setupDone);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const currentMonth = new Date().toISOString().slice(0, 7); // "YYYY-MM"
-    const lastCleanup = localStorage.getItem("mc_last_cleanup_month");
-    if (lastCleanup !== currentMonth) {
-      dispatch(deleteMatchesBeforeMonth(currentMonth));
-      localStorage.setItem("mc_last_cleanup_month", currentMonth);
+    const today = new Date().toISOString().split("T")[0]; // "YYYY-MM-DD"
+    const lastCleanup = localStorage.getItem("mc_last_cleanup_day");
+    if (lastCleanup !== today) {
+      dispatch(deleteMatchesBeforeDate(today));
+      localStorage.setItem("mc_last_cleanup_day", today);
     }
   }, []);
 
