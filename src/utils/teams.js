@@ -400,3 +400,18 @@ export function resolveTeam(idOrCustom) {
   }
   return getTeam(idOrCustom);
 }
+
+// ── Championnats liés aux équipes favorites ─────────────────────────────────
+
+export const CHAMPIONSHIP_TYPES = {
+  champ_it: { label: "Championnat Italien", color: "#009246" },
+  champ_tn: { label: "Championnat Tunisien", color: "#d4531a" },
+};
+
+// team ID → championship type ID
+export const TEAM_CHAMPIONSHIPS = {
+  inter:       "champ_it",
+  cab:         "champ_tn",
+  nat_tunisie: "champ_tn",
+  nat_tun:     "champ_tn",
+};

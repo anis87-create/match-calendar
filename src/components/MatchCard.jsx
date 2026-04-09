@@ -5,7 +5,7 @@ import { deleteMatch } from "../features/matches/matchesSlice";
 import { setEditingId } from "../features/ui/uiSlice";
 import { leagueNames } from "../utils/leagues";
 import { prioText, prioClass } from "../utils/scoring";
-import { ALL_TEAMS, getTeam, resolveTeam } from "../utils/teams";
+import { ALL_TEAMS, getTeam, resolveTeam, CHAMPIONSHIP_TYPES } from "../utils/teams";
 import ChannelBadge from "./ChannelBadge";
 
 const SKIP = new Set(["de", "du", "d", "el", "al", "le", "la", "les", "the", "of", "et", "des"]);
@@ -73,8 +73,9 @@ export default function MatchCard({ match, plan }) {
   // Resolve team info (type = favorite team)
   const team = getTeam(match.type);
   const isImportant = match.type === "important";
-  const teamColor = team ? team.color : isImportant ? "#e24b4a" : "#999";
-  const teamName = team ? team.name : isImportant ? "Grand match" : "Autre";
+  const champInfo = CHAMPIONSHIP_TYPES[match.type];
+  const teamColor = team ? team.color : isImportant ? "#e24b4a" : champInfo ? champInfo.color : "#999";
+  const teamName = team ? team.name : isImportant ? "Grand match" : champInfo ? champInfo.label : "Autre";
 
   // Team 1 & 2 logos (supports custom teams with "__" prefix)
   let team1 = match.team1Id ? resolveTeam(match.team1Id) : null;
