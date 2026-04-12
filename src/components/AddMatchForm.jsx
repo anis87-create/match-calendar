@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addMatch, updateMatch } from "../features/matches/matchesSlice";
 import { clearEditing } from "../features/ui/uiSlice";
-import { resolveTeam, TEAMS_BY_GROUP, CHAMPIONSHIP_TYPES, TEAM_CHAMPIONSHIPS } from "../utils/teams";
+import { resolveTeam, TEAMS_BY_GROUP } from "../utils/teams";
 import { leagueNames } from "../utils/leagues";
 import TeamLogo from "./TeamLogo";
 
@@ -388,9 +388,6 @@ export default function AddMatchForm() {
               if (!team) return null;
               return <option key={id} value={id}>{team.name}</option>;
             })}
-            {[...new Set(favoriteTeams.map(id => TEAM_CHAMPIONSHIPS[id]).filter(Boolean))].map(champId => (
-              <option key={champId} value={champId}>🏆 {CHAMPIONSHIP_TYPES[champId].label}</option>
-            ))}
             <option value="important">⭐ Grand match</option>
             <option value="autre">📋 Autre</option>
           </select>
