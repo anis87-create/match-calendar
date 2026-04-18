@@ -390,13 +390,17 @@ export function resolveTeam(idOrCustom) {
   if (!idOrCustom) return null;
   if (idOrCustom.startsWith("__")) {
     const rest = idOrCustom.slice(2);
-    const pipe = rest.indexOf("|");
-    if (pipe > -1) {
-      const cc = rest.slice(0, pipe);
-      const name = rest.slice(pipe + 1);
-      return { id: idOrCustom, name, color: "#888888", logo: f(cc) };
+    const parts = rest.split("|");
+    let cc = null, name = rest, color = "#888888";
+    if (parts.length >= 3) {
+      cc = parts[0]; name = parts[1]; color = parts[2];
+    } else if (parts.length === 2) {
+      if (parts[1].startsWith("#")) { name = parts[0]; color = parts[1]; }
+      else { cc = parts[0]; name = parts[1]; }
+    } else {
+      name = rest;
     }
-    return { id: idOrCustom, name: rest, color: "#888888", logo: null };
+    return { id: idOrCustom, name, color, logo: cc ? f(cc) : null };
   }
   return getTeam(idOrCustom);
 }

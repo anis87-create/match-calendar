@@ -214,6 +214,18 @@ body{font-family:system-ui,sans-serif;background:#f4f4f4;color:#111;padding:1.5r
 .custom-country-name{font-size:9px;color:#666;white-space:nowrap;max-width:44px;overflow:hidden;text-overflow:ellipsis;}
 .custom-country-skip{width:100%;font-size:11px;color:#aaa;background:none;border:none;cursor:pointer;padding:4px;text-align:center;border-top:1px solid #eee;margin-top:2px;}
 .custom-country-skip:hover{color:#555;}
+/* Sélecteur de couleur pour équipe inconnue */
+.custom-color-picker{padding:8px;}
+.custom-color-title{font-size:12px;color:#555;margin-bottom:8px;}
+.custom-color-presets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.custom-color-swatch{width:28px;height:28px;border-radius:50%;cursor:pointer;transition:transform .1s,box-shadow .1s;border:2px solid transparent;flex-shrink:0;}
+.custom-color-swatch:hover{transform:scale(1.15);}
+.custom-color-swatch.selected{border-color:#333;box-shadow:0 0 0 2px #fff inset;}
+.custom-color-input-row{display:flex;align-items:center;gap:8px;border-top:1px solid #eee;padding-top:8px;margin-top:2px;}
+.custom-color-input-row input[type=color]{width:36px;height:28px;border:1px solid #ddd;border-radius:4px;cursor:pointer;padding:1px;}
+.custom-color-input-label{font-size:11px;color:#666;flex:1;}
+.custom-color-confirm{font-size:11px;background:#003399;color:#fff;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;}
+.custom-color-confirm:hover{background:#0044cc;}
 
 /* ── Match card logos ── */
 .match-teams-logos{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:13px;font-weight:600;}
