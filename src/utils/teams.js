@@ -50,7 +50,7 @@ const PREMIER_LEAGUE = [
 ];
 
 const LA_LIGA = [
-  { id: "real_madrid",   name: "Real Madrid",       color: "#FEBE10", logo: f("es") },
+  { id: "real_madrid",   name: "Real Madrid",       color: "#FFFFFF", logo: f("es") },
   { id: "barcelona",     name: "FC Barcelona",      color: "#004D98", logo: f("es") },
   { id: "atletico",      name: "Atlético Madrid",   color: "#CC0000", logo: f("es") },
   { id: "athletic",      name: "Athletic Club",     color: "#EE2523", logo: f("es") },

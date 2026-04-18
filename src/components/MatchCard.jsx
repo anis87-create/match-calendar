@@ -97,8 +97,11 @@ export default function MatchCard({ match, plan }) {
     !!getTeam(match.type);
   const showFlags = !concernedIsClub;
 
+  const team1Color = team1?.color ?? teamColor;
+  const team2Color = team2?.color ?? teamColor;
+
   const pillStyle = { background: teamColor + "18", color: teamColor, border: `1px solid ${teamColor}33` };
-  const cardBorderStyle = isEditing ? {} : { borderLeft: `3px solid ${teamColor}` };
+  const cardBorderStyle = isEditing ? {} : { borderLeft: `3px solid ${team1Color}` };
 
   function handleEdit() {
     dispatch(setEditingId(match.id));
@@ -149,11 +152,11 @@ export default function MatchCard({ match, plan }) {
         <button className="delete-btn" onClick={() => dispatch(deleteMatch(match.id))}>✕</button>
       </div>
 
-      {/* Priority strip */}
+      {/* Team 2 color strip */}
       <div style={{
         position: "absolute", right: 0, top: 0, bottom: 0, width: "4px",
         borderRadius: "0 12px 12px 0",
-        background: prio === 1 ? "#003399" : prio === 2 ? "#1e8449" : "#f57f17"
+        background: isEditing ? "transparent" : team2Color
       }} />
     </div>
   );
