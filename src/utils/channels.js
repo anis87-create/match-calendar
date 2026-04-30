@@ -131,6 +131,13 @@ const CHANNEL_MAP = [
     abbr: "AOULA",
   },
   {
+    keys: ["diwan sport", "diwansport", "diwan"],
+    logo: "https://diwansport.com/assets/favicon.png",
+    bg: "#1a1a2e",
+    color: "#fff",
+    abbr: "DIWAN",
+  },
+  {
     keys: ["youtube"],
     logo: null,
     bg: "#ff0000",
