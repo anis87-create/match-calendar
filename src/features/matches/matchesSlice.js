@@ -59,6 +59,15 @@ const matchesSlice = createSlice({
       state.items.splice(ti, 0, moved);
       persist(state);
     },
+    deleteExpiredMatches(state) {
+      const now = Date.now();
+      state.items = state.items.filter((m) => {
+        if (!m.date || !m.time) return true;
+        const matchStart = new Date(`${m.date}T${m.time}`).getTime();
+        return now < matchStart + 2 * 60 * 60 * 1000;
+      });
+      persist(state);
+    },
   },
 });
 
@@ -68,5 +77,5 @@ function persist(state) {
   } catch (_) {}
 }
 
-export const { addMatch, updateMatch, deleteMatch, toggleWatched, reorderMatches, deleteMatchesBeforeDate } = matchesSlice.actions;
+export const { addMatch, updateMatch, deleteMatch, toggleWatched, reorderMatches, deleteMatchesBeforeDate, deleteExpiredMatches } = matchesSlice.actions;
 export default matchesSlice.reducer;

@@ -7,19 +7,25 @@ import AddMatchForm from "./components/AddMatchForm";
 import Filters from "./components/Filters";
 import MatchList from "./components/MatchList";
 import SetupWizard from "./components/SetupWizard";
-import { deleteMatchesBeforeDate } from "./features/matches/matchesSlice";
+import { deleteMatchesBeforeDate, deleteExpiredMatches } from "./features/matches/matchesSlice";
 
 export default function App() {
   const setupDone = useSelector((s) => s.profile.setupDone);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const today = new Date().toISOString().split("T")[0]; // "YYYY-MM-DD"
+    const today = new Date().toISOString().split("T")[0];
     const lastCleanup = localStorage.getItem("mc_last_cleanup_day");
     if (lastCleanup !== today) {
       dispatch(deleteMatchesBeforeDate(today));
       localStorage.setItem("mc_last_cleanup_day", today);
     }
+  }, []);
+
+  useEffect(() => {
+    dispatch(deleteExpiredMatches());
+    const interval = setInterval(() => dispatch(deleteExpiredMatches()), 60_000);
+    return () => clearInterval(interval);
   }, []);
 
   if (!setupDone) return <SetupWizard />;
