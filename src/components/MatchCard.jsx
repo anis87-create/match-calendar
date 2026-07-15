@@ -80,7 +80,7 @@ export default function MatchCard({ match, plan }) {
   const team = getTeam(match.type);
   const isImportant = match.type === "important";
   const champInfo = CHAMPIONSHIP_TYPES[match.type];
-  const teamColor = team ? team.color : isImportant ? "#e24b4a" : champInfo ? champInfo.color : "#999";
+  const teamColor = team ? team.color : isImportant ? "#8b5cf6" : champInfo ? champInfo.color : "#999";
   const teamName = team ? team.name : isImportant ? "Grand match" : champInfo ? champInfo.label : "Autre";
 
   // Team 1 & 2 logos (supports custom teams with "__" prefix)
@@ -103,11 +103,8 @@ export default function MatchCard({ match, plan }) {
     !!getTeam(match.type);
   const showFlags = !concernedIsClub;
 
-  const team1Color = team1?.color ?? teamColor;
-  const team2Color = team2?.color ?? teamColor;
-
   const pillStyle = { background: teamColor + "18", color: teamColor, border: `1px solid ${teamColor}33` };
-  const cardBorderStyle = isEditing ? {} : { borderLeft: `3px solid ${team1Color}` };
+  const cardBorderStyle = isEditing ? {} : { borderLeft: `3px solid ${teamColor}` };
 
   function handleEdit() {
     dispatch(setEditingId(match.id));
@@ -157,13 +154,6 @@ export default function MatchCard({ match, plan }) {
         <button className="edit-btn" onClick={handleEdit}>Modifier</button>
         <button className="delete-btn" onClick={() => dispatch(deleteMatch(match.id))}>✕</button>
       </div>
-
-      {/* Team 2 color strip */}
-      <div style={{
-        position: "absolute", right: 0, top: 0, bottom: 0, width: "4px",
-        borderRadius: "0 12px 12px 0",
-        background: isEditing ? "transparent" : team2Color
-      }} />
     </div>
   );
 }
