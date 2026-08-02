@@ -80,7 +80,7 @@ export default function MatchCard({ match, plan }) {
   const team = getTeam(match.type);
   const isImportant = match.type === "important";
   const champInfo = CHAMPIONSHIP_TYPES[match.type];
-  const teamColor = team ? team.color : isImportant ? "#5a0099" : champInfo ? champInfo.color : "#999";
+  const teamColor = team ? team.color : isImportant ? "#8b5cf6" : champInfo ? champInfo.color : "#999";
   const teamName = team ? team.name : isImportant ? "Grand match" : champInfo ? champInfo.label : "Autre";
 
   // Team 1 & 2 logos (supports custom teams with "__" prefix)
