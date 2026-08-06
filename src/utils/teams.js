@@ -24,6 +24,7 @@ const SERIE_A = [
   { id: "como",       name: "Como 1907",         color: "#003399", logo: f("it") },
   { id: "venezia",    name: "Venezia FC",        color: "#FF6600", logo: f("it") },
   { id: "parma",      name: "Parma Calcio",      color: "#FFC72C", logo: f("it") },
+  { id: "frosinone",  name: "Frosinone Calcio",  color: "#004393", logo: f("it") },
 ];
 
 const PREMIER_LEAGUE = [
@@ -131,6 +132,8 @@ const LIGUE1_TUN = [
   { id: "us_tataouine",  name: "US Tataouine",                color: "#006600", logo: f("tn") },
   { id: "js_omrane",     name: "JS Omrane",                   color: "#CC0000", logo: f("tn") },
   { id: "us_bengardane", name: "US Ben Guerdane",             color: "#CC0000", logo: f("tn") },
+  { id: "pss_eddaier",   name: "Progrès Sportif de Sakiet Eddaïer", color: "#003399", logo: f("tn") },
+  { id: "es_hammam_sousse", name: "Espoir Sportif de Hammam Sousse", color: "#FFCC00", logo: f("tn") },
 ];
 
 const LIGUE2_TUN = [
