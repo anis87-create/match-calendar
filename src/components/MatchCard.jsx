@@ -5,7 +5,7 @@ import { deleteMatch } from "../features/matches/matchesSlice";
 import { setEditingId } from "../features/ui/uiSlice";
 import { leagueNames } from "../utils/leagues";
 import { prioText, prioClass } from "../utils/scoring";
-import { ALL_TEAMS, getTeam, resolveTeam, CHAMPIONSHIP_TYPES } from "../utils/teams";
+import { ALL_TEAMS, getTeam, resolveTeam, getLeagueChampionship } from "../utils/teams";
 import ChannelBadge from "./ChannelBadge";
 
 const SKIP = new Set(["de", "du", "d", "el", "al", "le", "la", "les", "the", "of", "et", "des"]);
@@ -61,6 +61,7 @@ import TeamLogo from "./TeamLogo";
 export default function MatchCard({ match, plan }) {
   const dispatch = useDispatch();
   const editingId = useSelector((s) => s.ui.editingId);
+  const favoriteTeams = useSelector((s) => s.profile.favoriteTeams);
   const isEditing = editingId === match.id;
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: match.id });
@@ -79,7 +80,8 @@ export default function MatchCard({ match, plan }) {
   // Resolve team info (type = favorite team)
   const team = getTeam(match.type);
   const isImportant = match.type === "important";
-  const champInfo = CHAMPIONSHIP_TYPES[match.type];
+  // "Autre" match dans la ligue nationale/coupe d'un pays favori → recoloré automatiquement
+  const champInfo = !team && !isImportant ? getLeagueChampionship(match.league, favoriteTeams) : null;
   const teamColor = team ? team.color : isImportant ? "#8b5cf6" : champInfo ? champInfo.color : "#999";
   const teamName = team ? team.name : isImportant ? "Grand match" : champInfo ? champInfo.label : "Autre";
 

@@ -405,17 +405,47 @@ export function resolveTeam(idOrCustom) {
   return getTeam(idOrCustom);
 }
 
-// ── Championnats liés aux équipes favorites ─────────────────────────────────
+// ── Championnats/coupes nationaux liés aux équipes favorites ────────────────
+// Pas de sélection manuelle : un match tagué "autre" est automatiquement
+// recoloré si sa compétition (league) est le championnat/coupe national
+// d'un pays dont l'utilisateur a une équipe favorite.
 
-export const CHAMPIONSHIP_TYPES = {
-  champ_it: { label: "Championnat Italien", color: "#009246" },
-  champ_tn: { label: "Championnat Tunisien", color: "#d4531a" },
+export const COUNTRY_CHAMPIONSHIPS = {
+  it:       { label: "Championnat/Coupe d'Italie",          color: "#009246" },
+  es:       { label: "Championnat/Coupe d'Espagne",         color: "#CC0000" },
+  "gb-eng": { label: "Championnat/Coupe d'Angleterre",      color: "#0033A0" },
+  de:       { label: "Championnat/Coupe d'Allemagne",       color: "#FFCC00" },
+  fr:       { label: "Championnat/Coupe de France",         color: "#0055A4" },
+  tn:       { label: "Championnat/Coupe de Tunisie",        color: "#d4531a" },
+  dz:       { label: "Championnat/Coupe d'Algérie",         color: "#006233" },
+  ma:       { label: "Championnat/Coupe du Maroc",          color: "#C1272D" },
+  eg:       { label: "Championnat/Coupe d'Égypte",          color: "#CC0001" },
+  sa:       { label: "Championnat/Coupe d'Arabie Saoudite", color: "#006C35" },
 };
 
-// team ID → championship type ID
-export const TEAM_CHAMPIONSHIPS = {
-  inter:       "champ_it",
-  cab:         "champ_tn",
-  nat_tunisie: "champ_tn",
-  nat_tun:     "champ_tn",
+// league ID (champ "Compétition") → code pays de son championnat/coupe national
+const LEAGUE_COUNTRY = {
+  serie: "it", coppa: "it",
+  liga: "es", coparey: "es",
+  pl: "gb-eng", facup: "gb-eng", carabaocup: "gb-eng",
+  bundesliga: "de", dfbpokal: "de",
+  ligue1fr: "fr", coupefr: "fr",
+  ligue1: "tn", ligue2: "tn", cuptun: "tn",
+  spl: "sa",
 };
+
+function countryCodeFromLogo(logo) {
+  const m = logo?.match(/\/1x1\/([^.]+)\.svg$/);
+  return m ? m[1] : null;
+}
+
+// Renvoie { label, color } si la compétition du match est le championnat/coupe
+// national d'un pays représenté parmi les équipes favorites, sinon null.
+export function getLeagueChampionship(leagueId, favoriteTeamIds = []) {
+  const cc = LEAGUE_COUNTRY[leagueId];
+  if (!cc) return null;
+  const isFavoriteCountry = favoriteTeamIds.some(
+    (id) => countryCodeFromLogo(getTeam(id)?.logo) === cc
+  );
+  return isFavoriteCountry ? COUNTRY_CHAMPIONSHIPS[cc] ?? null : null;
+}
