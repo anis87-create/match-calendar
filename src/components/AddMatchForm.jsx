@@ -70,7 +70,7 @@ const ALL_COUNTRIES = [
   { cc: "ba", name: "Bosnie" },     { cc: "me", name: "Monténégro" },
   { cc: "mk", name: "Macédoine" },  { cc: "is", name: "Islande" },
   { cc: "fi", name: "Finlande" },   { cc: "ge", name: "Géorgie" },
-  { cc: "il", name: "Israël" },     { cc: "xk", name: "Kosovo" },
+  { cc: "xk", name: "Kosovo" },
   // Amériques
   { cc: "br", name: "Brésil" },     { cc: "ar", name: "Argentine" },
   { cc: "uy", name: "Uruguay" },    { cc: "cl", name: "Chili" },

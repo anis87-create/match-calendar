@@ -266,7 +266,6 @@ const NAT_UEFA = [
   { id: "nat_islande",     name: "Islande",          color: "#003399", logo: f("is")     },
   { id: "nat_finlande",    name: "Finlande",         color: "#003399", logo: f("fi")     },
   { id: "nat_georgie",     name: "Géorgie",          color: "#CC0000", logo: f("ge")     },
-  { id: "nat_israel",      name: "Israël",           color: "#003399", logo: f("il")     },
   { id: "nat_kosove",      name: "Kosovo",           color: "#003399", logo: f("xk")     },
 ];
 
