@@ -317,9 +317,6 @@ const NAT_AFC = [
   { id: "nat_irak",        name: "Irak",              color: "#CC0000", logo: f("iq") },
   { id: "nat_jordanie",    name: "Jordanie",          color: "#007A3D", logo: f("jo") },
   { id: "nat_ouzbekistan", name: "Ouzbékistan",       color: "#003399", logo: f("uz") },
-  { id: "nat_vietnam",     name: "Viêt Nam",          color: "#CC0000", logo: f("vn") },
-  { id: "nat_thailand",    name: "Thaïlande",         color: "#003399", logo: f("th") },
-  { id: "nat_indonesie",   name: "Indonésie",         color: "#CC0000", logo: f("id") },
   { id: "nat_bahrein",     name: "Bahreïn",           color: "#CC0000", logo: f("bh") },
   { id: "nat_koweit",      name: "Koweït",            color: "#007A3D", logo: f("kw") },
   { id: "nat_oman",        name: "Oman",              color: "#CC0000", logo: f("om") },
@@ -327,6 +324,18 @@ const NAT_AFC = [
   { id: "nat_liban",       name: "Liban",             color: "#CC0000", logo: f("lb") },
   { id: "nat_palestine",   name: "Palestine",         color: "#CC0000", logo: f("ps") },
   { id: "nat_coree_nord",  name: "Corée du Nord",     color: "#CC0000", logo: f("kp") },
+  // Asie du Sud-Est
+  { id: "nat_vietnam",     name: "Viêt Nam",          color: "#CC0000", logo: f("vn") },
+  { id: "nat_thailand",    name: "Thaïlande",         color: "#003399", logo: f("th") },
+  { id: "nat_indonesie",   name: "Indonésie",         color: "#CC0000", logo: f("id") },
+  { id: "nat_philippines", name: "Philippines",       color: "#0038A8", logo: f("ph") },
+  { id: "nat_malaisie",    name: "Malaisie",          color: "#010066", logo: f("my") },
+  { id: "nat_singapour",   name: "Singapour",         color: "#CC0000", logo: f("sg") },
+  { id: "nat_myanmar",     name: "Myanmar",           color: "#FFCD00", logo: f("mm") },
+  { id: "nat_cambodge",    name: "Cambodge",          color: "#032EA1", logo: f("kh") },
+  { id: "nat_laos",        name: "Laos",              color: "#CE1126", logo: f("la") },
+  { id: "nat_brunei",      name: "Brunei",            color: "#FFCD00", logo: f("bn") },
+  { id: "nat_timor",       name: "Timor Oriental",    color: "#CC0000", logo: f("tl") },
 ];
 
 const NAT_CONMEBOL = [

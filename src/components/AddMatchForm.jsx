@@ -43,9 +43,15 @@ const ALL_COUNTRIES = [
   { cc: "jp", name: "Japon" },          { cc: "kr", name: "Corée du Sud" },
   { cc: "cn", name: "Chine" },          { cc: "in", name: "Inde" },
   { cc: "ir", name: "Iran" },           { cc: "au", name: "Australie" },
-  { cc: "uz", name: "Ouzbékistan" },    { cc: "vn", name: "Viêt Nam" },
-  { cc: "th", name: "Thaïlande" },      { cc: "id", name: "Indonésie" },
+  { cc: "uz", name: "Ouzbékistan" },
   { cc: "kp", name: "Corée du Nord" },
+  // Asie du Sud-Est
+  { cc: "vn", name: "Viêt Nam" },       { cc: "th", name: "Thaïlande" },
+  { cc: "id", name: "Indonésie" },      { cc: "ph", name: "Philippines" },
+  { cc: "my", name: "Malaisie" },       { cc: "sg", name: "Singapour" },
+  { cc: "mm", name: "Myanmar" },        { cc: "kh", name: "Cambodge" },
+  { cc: "la", name: "Laos" },           { cc: "bn", name: "Brunei" },
+  { cc: "tl", name: "Timor Oriental" },
   // Europe
   { cc: "fr", name: "France" },     { cc: "es", name: "Espagne" },
   { cc: "de", name: "Allemagne" },  { cc: "gb-eng", name: "Angleterre" },
@@ -402,7 +408,11 @@ export default function AddMatchForm() {
           <label>Équipe 1</label>
           <TeamSelect
             value={form.team1Id}
-            onChange={(id) => setForm((p) => ({ ...p, team1Id: id }))}
+            onChange={(id) => setForm((p) => ({
+              ...p,
+              team1Id: id,
+              type: favoriteTeams.includes(id) ? id : p.type,
+            }))}
             placeholder="Choisir l'équipe 1"
           />
         </div>
@@ -423,7 +433,11 @@ export default function AddMatchForm() {
           <label>Équipe 2</label>
           <TeamSelect
             value={form.team2Id}
-            onChange={(id) => setForm((p) => ({ ...p, team2Id: id }))}
+            onChange={(id) => setForm((p) => ({
+              ...p,
+              team2Id: id,
+              type: favoriteTeams.includes(id) ? id : p.type,
+            }))}
             placeholder="Choisir l'équipe 2"
           />
         </div>
