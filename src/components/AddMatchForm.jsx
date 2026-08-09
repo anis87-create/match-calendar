@@ -85,21 +85,6 @@ const ALL_COUNTRIES = [
 
 const FLAG_BASE = "https://flagicons.lipis.dev/flags/1x1/";
 
-const PRESET_COLORS = [
-  { hex: "#CC0000", label: "Rouge" },
-  { hex: "#003399", label: "Bleu" },
-  { hex: "#006600", label: "Vert" },
-  { hex: "#FFD700", label: "Or" },
-  { hex: "#FF6600", label: "Orange" },
-  { hex: "#000000", label: "Noir" },
-  { hex: "#FFFFFF", label: "Blanc" },
-  { hex: "#8B0000", label: "Rouge foncé" },
-  { hex: "#6A0DAD", label: "Violet" },
-  { hex: "#2FAEE0", label: "Bleu ciel" },
-  { hex: "#1D6F42", label: "Vert foncé" },
-  { hex: "#888888", label: "Gris" },
-];
-
 // Décode un ID custom : "__CC|Nom|#color", "__CC|Nom", "__Nom|#color" ou "__Nom"
 function parseCustomId(id) {
   if (!id?.startsWith("__")) return null;
@@ -116,9 +101,8 @@ function parseCustomId(id) {
 function TeamSelect({ value, onChange, placeholder }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [pendingCustom, setPendingCustom] = useState(null); // {name, cc, step:'country'|'color'}
+  const [pendingCustom, setPendingCustom] = useState(null); // {name, step:'country'}
   const [countryQuery, setCountryQuery] = useState("");
-  const [customColor, setCustomColor] = useState("#888888");
   const ref = useRef(null);
 
   const selected = resolveTeam(value);
@@ -151,17 +135,12 @@ function TeamSelect({ value, onChange, placeholder }) {
   }
 
   function confirmCustom(cc) {
-    setPendingCustom((prev) => ({ ...prev, cc, step: "color" }));
-    setCountryQuery("");
-    setCustomColor("#888888");
-  }
-
-  function confirmColor(color) {
-    const { name, cc } = pendingCustom;
-    const id = cc ? `__${cc}|${name}|${color}` : `__${name}|${color}`;
+    const { name } = pendingCustom;
+    const id = cc ? `__${cc}|${name}` : `__${name}`;
     onChange(id);
     setOpen(false);
     setPendingCustom(null);
+    setCountryQuery("");
   }
 
   function handleKeyDown(e) {
@@ -192,44 +171,8 @@ function TeamSelect({ value, onChange, placeholder }) {
       {open && (
         <div className="team-select-dropdown">
 
-          {/* Étape 3 : choisir la couleur */}
-          {pendingCustom?.step === "color" ? (
-            <div className="custom-color-picker">
-              <div className="custom-color-title">
-                <strong>"{pendingCustom.name}"</strong> — couleur&nbsp;:
-              </div>
-              <div className="custom-color-presets">
-                {PRESET_COLORS.map(({ hex, label }) => (
-                  <button
-                    key={hex}
-                    className={`custom-color-swatch${customColor === hex ? " selected" : ""}`}
-                    title={label}
-                    style={{
-                      background: hex,
-                      border: hex === "#FFFFFF" ? "2px solid #ccc" : "2px solid transparent",
-                      outline: customColor === hex ? "2px solid #333" : "none",
-                      outlineOffset: "2px",
-                    }}
-                    onClick={() => confirmColor(hex)}
-                  />
-                ))}
-              </div>
-              <div className="custom-color-input-row">
-                <input
-                  type="color"
-                  value={customColor}
-                  onChange={(e) => setCustomColor(e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                />
-                <span className="custom-color-input-label">Personnalisé</span>
-                <button className="custom-color-confirm" onClick={() => confirmColor(customColor)}>
-                  Choisir
-                </button>
-              </div>
-            </div>
-
-          /* Étape 2 : choisir le pays */
-          ) : pendingCustom?.step === "country" ? (
+          {/* Étape 2 : choisir le pays */}
+          {pendingCustom?.step === "country" ? (
             <div className="custom-country-picker">
               <div className="custom-country-title">
                 <strong>"{pendingCustom.name}"</strong> — pays&nbsp;:
