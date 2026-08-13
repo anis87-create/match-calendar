@@ -6,8 +6,8 @@ import { TEAMS_BY_GROUP, ALL_TEAMS } from "../utils/teams";
 
 const LEAGUE_GROUPS = [
   { group: "Coupes européennes", leagues: ["ucl", "uel", "uecl"] },
-  { group: "Championnats", leagues: ["serie", "liga", "pl", "bundesliga", "ligue1fr", "spl", "ligue1", "ligue2"] },
-  { group: "Coupes nationales", leagues: ["coppa", "coparey", "facup", "carabaocup", "dfbpokal", "coupefr", "cuptun"] },
+  { group: "Championnats", leagues: ["serie", "liga", "pl", "bundesliga", "ligue1fr", "spl", "superlig", "ligue1", "ligue2"] },
+  { group: "Coupes nationales", leagues: ["coppa", "coparey", "facup", "carabaocup", "dfbpokal", "coupefr", "cuptun", "coupetr"] },
   { group: "Super coupes", leagues: ["supercoupefr", "supercoupede", "supercoupeen", "supercoupees", "supercoupeit", "supercoupeaf", "supercoupeeu"] },
   { group: "Afrique & Monde", leagues: ["caf", "wcq_afr", "wcq_eur", "wc", "friendly"] },
   { group: "Sélections & Éliminatoires", leagues: ["euroq", "canq", "nationsleague"] },

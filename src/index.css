@@ -155,12 +155,14 @@ body{font-family:system-ui,sans-serif;background:#f4f4f4;color:#111;padding:1.5r
 .pill-ligue1fr{background:#eef0ff;color:#2c3e8c;}
 .pill-ligue1{background:#fffbe6;color:#8a7000;}
 .pill-ligue2{background:#fff3cd;color:#7a5800;}
+.pill-superlig{background:#ffe6e9;color:#a4001e;}
 .pill-coparey{background:#faeeda;color:#854f0b;}
 .pill-facup{background:#eaf3de;color:#3b6d11;}
 .pill-carabaocup{background:#e6f7ee;color:#1a7a3c;}
 .pill-dfbpokal{background:#fdeaea;color:#c0392b;}
 .pill-coupefr{background:#eef0ff;color:#2c3e8c;}
 .pill-cuptun{background:#ffe6e6;color:#990000;}
+.pill-coupetr{background:#ffe0e4;color:#a4001e;}
 .pill-spl{background:#e6f4e6;color:#005500;}
 .pill-caf{background:#faeeda;color:#854f0b;}
 .pill-supercoupefr{background:#eef0ff;color:#2c3e8c;}
