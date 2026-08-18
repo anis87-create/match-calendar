@@ -22,8 +22,10 @@ export default function MatchList() {
   const todayObj = new Date(today + "T12:00:00");
   const yd = new Date(todayObj); yd.setDate(todayObj.getDate() - 1);
   const tm = new Date(todayObj); tm.setDate(todayObj.getDate() + 1);
+  const at = new Date(todayObj); at.setDate(todayObj.getDate() + 2);
   const yesterday = yd.toISOString().split("T")[0];
   const tomorrow = tm.toISOString().split("T")[0];
+  const afterTomorrow = at.toISOString().split("T")[0];
 
   const predefined = ["all", "important"];
   const filtered = items.filter((m) => {
@@ -44,9 +46,11 @@ export default function MatchList() {
   });
   const sortedDays = Object.keys(grouped).sort();
 
-  // 3 prochains jours avec matchs
-  const visibleDays = showAll ? sortedDays : sortedDays.slice(0, 3);
-  const hiddenCount = sortedDays.length - 3;
+  // Jours dans la fenêtre J / J+1 / J+2 qui ont effectivement des matchs
+  const nearWindow = [today, tomorrow, afterTomorrow];
+  const nearDays = sortedDays.filter((d) => nearWindow.includes(d));
+  const visibleDays = showAll ? sortedDays : nearDays;
+  const hiddenCount = sortedDays.length - nearDays.length;
 
   function handleDragEnd(event) {
     const { active, over } = event;
@@ -59,6 +63,9 @@ export default function MatchList() {
     <>
       {filtered.length > 1 && (
         <p className="hint">Glisse les matchs pour les réordonner</p>
+      )}
+      {!showAll && visibleDays.length === 0 && (
+        <div className="empty">Aucun match dans les 3 prochains jours</div>
       )}
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={filtered.map((m) => m.id)} strategy={verticalListSortingStrategy}>
