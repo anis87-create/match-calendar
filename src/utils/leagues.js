@@ -35,6 +35,7 @@ export const leagueNames = {
   wcq_asi: "Qualif. CDM Asie",
   wcq_sam: "Qualif. CDM Amérique du Sud",
   wc: "Coupe du Monde",
+  golfe: "Coupe du Golfe",
   friendly: "Match amical",
   other: "Autre",
 };
@@ -76,6 +77,7 @@ export const leaguePillClass = {
   wcq_asi: "pill-wcq",
   wcq_sam: "pill-wcq",
   wc: "pill-wc",
+  golfe: "pill-wcq",
   friendly: "pill-friendly",
   other: "pill-wcq",
 };

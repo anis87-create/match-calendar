@@ -9,7 +9,7 @@ const LEAGUE_GROUPS = [
   { group: "Championnats", leagues: ["serie", "liga", "pl", "bundesliga", "ligue1fr", "spl", "superlig", "ligue1", "ligue2"] },
   { group: "Coupes nationales", leagues: ["coppa", "coparey", "facup", "carabaocup", "dfbpokal", "coupefr", "cuptun", "coupetr"] },
   { group: "Super coupes", leagues: ["supercoupefr", "supercoupede", "supercoupeen", "supercoupees", "supercoupeit", "supercoupeaf", "supercoupeeu"] },
-  { group: "Afrique & Monde", leagues: ["caf", "wcq_afr", "wcq_eur", "wc", "friendly"] },
+  { group: "Afrique & Monde", leagues: ["caf", "wcq_afr", "wcq_eur", "wc", "golfe", "friendly"] },
   { group: "Sélections & Éliminatoires", leagues: ["euroq", "canq", "nationsleague"] },
 ];
 

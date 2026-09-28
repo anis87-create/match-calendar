@@ -301,6 +301,7 @@ const NAT_CAF = [
   { id: "nat_gabon",       name: "Gabon",             color: "#009E60", logo: f("ga") },
   { id: "nat_tanzanie",    name: "Tanzanie",          color: "#1EB53A", logo: f("tz") },
   { id: "nat_mauritanie",  name: "Mauritanie",        color: "#006233", logo: f("mr") },
+  { id: "nat_botswana",    name: "Botswana",          color: "#75AADB", logo: f("bw") },
 ];
 
 const NAT_AFC = [
